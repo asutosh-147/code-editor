@@ -3,11 +3,14 @@ import { runCodeInDocker } from "../utils/docker";
 
 export const runner = Router();
 const cleanOutput = (buffer: string) => {
-  return buffer
+  let cleanedBuffer = buffer
     .toString()
     .replace(/[^ -~\t\r\n]+/g, "")
     .trim()
-    .slice(1, -1);
+    if (cleanedBuffer.startsWith('"')) {
+      cleanedBuffer = cleanedBuffer.slice(1, -1);
+    }
+    return cleanedBuffer;
 };
 runner.post("/run", async (req: Request, res: Response) => {
   try {
