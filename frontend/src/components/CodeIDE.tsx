@@ -11,6 +11,7 @@ const CodeIDE = () => {
   const [input, setInput] = useState<null | string>(null);
   const [loading, setLoading] = useState(false);
   const [lang, setLang] = useState("python");
+  console.log(editorValue);
   const handleSubmit = async () => {
     try {
       setLoading(true);
