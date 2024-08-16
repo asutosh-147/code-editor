@@ -4,11 +4,15 @@ import { useState } from "react";
 import { backend_url, SupportedLangs } from "../lib/constants";
 import Input from "./Input";
 import Output from "./Output";
+import ToolBar from "./ToolBar";
+import { useRecoilValue } from "recoil";
+import { themeAtom } from "@/store/atoms/theme";
 
 const CodeIDE = () => {
   const [editorValue, setEditorValue] = useState<string | null>(null);
-  const [output, setOutput] = useState<string>("");
+  const theme = useRecoilValue(themeAtom);
   const [input, setInput] = useState<string>("");
+  const [output, setOutput] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [lang, setLang] = useState<SupportedLangs>("python");
   const handleSubmit = async () => {
@@ -18,7 +22,7 @@ const CodeIDE = () => {
       const response = await axios.post(`${backend_url}/api/code/run`, {
         language: lang,
         code: editorValue,
-        input
+        input,
       });
       setOutput(response.data.output);
     } catch (error: any) {
@@ -34,42 +38,16 @@ const CodeIDE = () => {
   return (
     <div className="grid grid-cols-6 gap-5 p-2 w-full h-full">
       <div className="flex flex-col items-start col-span-4 text-white">
-        <div className="flex items-center justify-center w-full gap-5 p-2">
-          <select
-            name="language"
-            id="lang"
-            className="bg-zinc-800 px-2 py-1 font-semibold rounded-md text-md"
-            value={lang}
-            onChange={(e) => {
-              setLang(e.target.value as SupportedLangs);
-            }}
-          >
-            <option className="bg-zinc-800" value="python">
-              python
-            </option>
-            <option className="bg-zinc-800" value="javascript">
-              javascript
-            </option>
-            <option className="bg-zinc-800" value="cpp">
-              cpp
-            </option>
-          </select>
-          <button
-            onClick={handleSubmit}
-            className="bg-black font-semibold rounded-md text-md px-4 py-1 active:scale-95 transition-all duration-300"
-          >
-            Run Code
-          </button>
-        </div>
+        <ToolBar lang={lang} setLang={setLang} onSubmit={handleSubmit} />
         <Editor
-          className="shadow-2xl"
-          height={650}
-          theme="vs-dark"
+          className="shadow-xl border-4 border-white dark:border-[#1e1e1e] rounded-lg"
+          height="calc(100vh - 154px)"
+          theme={theme=="dark" ? "vs-dark":"light"}
           language={lang}
           onChange={handleEditorChange}
         />
       </div>
-      <div className="grid grid-rows-3 h-full gap-5 text-zinc-200 col-span-2">
+      <div className="grid grid-rows-3 h-full gap-5 dark:text-zinc-200  col-span-2">
         <Input input={input} setInput={setInput} />
         <Output output={output} loading={loading} />
       </div>

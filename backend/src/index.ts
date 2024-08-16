@@ -5,7 +5,13 @@ import { v1 } from "./routes/v1";
 import { runner } from "./routes/runner";
 dotenv.config();
 const app = express();
-app.use(cors());
+
+const allowedHosts = process.env.ALLOWED_HOSTS?.split(',');
+
+app.use(cors({
+    origin:allowedHosts,
+    methods:'GET,POST,PUT,DELETE'
+}));
 app.use(express.json());
 app.use(v1);
 app.use("/api/code",runner);

@@ -3,5 +3,9 @@
 @tailwind utilities;
   
 body{
-    @apply bg-zinc-700
+    @apply dark:bg-zinc-700 bg-gray-300;
+}
+
+.scale-trans{
+    @apply hover:scale-105 transition-all duration-300 active:scale-95
 }

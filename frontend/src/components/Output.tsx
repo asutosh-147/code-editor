@@ -10,7 +10,7 @@ const Output = ({ output, loading }: OutputProps) => {
     <div className="flex flex-col gap-1 row-span-2">
       <div className="font-bold tracking-wide">Ouput</div>
       {loading ? (
-        <div className="h-full bg-zinc-900">
+        <div className="h-full bg-gray-50 rounded-md dark:bg-zinc-900">
           <Loader />
         </div>
       ) : (
@@ -19,7 +19,7 @@ const Output = ({ output, loading }: OutputProps) => {
           name="input"
           id="input"
           disabled
-          className="placeholder:text-zinc-200"
+          className="placeholder:text-zinc-200 font-semibold"
         />
       )}
     </div>

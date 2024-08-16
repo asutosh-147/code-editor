@@ -11,7 +11,7 @@ const Input = ({ input, setInput }: InputProps) => {
       <TextArea
         id="input"
         name="input"
-        placeholder="write input here"
+        placeholder="Your Inputs Here..."
         text={input}
         onChange={(e) => {
           setInput(e.target.value);
