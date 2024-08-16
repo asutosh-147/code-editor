@@ -1,8 +1,8 @@
-import Loader from "../ui/Loader";
+import Loader from "./ui/Loader";
 import TextArea from "./TextArea";
 
 type OutputProps = {
-  output: string | null;
+  output: string;
   loading: boolean;
 };
 const Output = ({ output, loading }: OutputProps) => {

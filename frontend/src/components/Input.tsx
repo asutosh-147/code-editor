@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 import TextArea from "./TextArea";
 type InputProps = {
-  input: string | null;
-  setInput: Dispatch<SetStateAction<string | null>>;
+  input: string;
+  setInput: Dispatch<SetStateAction<string>>;
 };
 const Input = ({ input, setInput }: InputProps) => {
   return (

@@ -1,29 +1,30 @@
 import { Editor } from "@monaco-editor/react";
 import axios from "axios";
 import { useState } from "react";
-import { backend_url } from "../utils/constants";
+import { backend_url, SupportedLangs } from "../lib/constants";
 import Input from "./Input";
 import Output from "./Output";
 
 const CodeIDE = () => {
   const [editorValue, setEditorValue] = useState<string | null>(null);
-  const [output, setOutput] = useState<null | string>(null);
-  const [input, setInput] = useState<null | string>(null);
+  const [output, setOutput] = useState<string>("");
+  const [input, setInput] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [lang, setLang] = useState("python");
-  console.log(editorValue);
+  const [lang, setLang] = useState<SupportedLangs>("python");
   const handleSubmit = async () => {
     try {
+      if (!editorValue || !editorValue.length) return;
       setLoading(true);
       const response = await axios.post(`${backend_url}/api/code/run`, {
-        language: "python",
+        language: lang,
         code: editorValue,
+        input
       });
       setOutput(response.data.output);
     } catch (error: any) {
       console.log(error.message);
       setOutput(error.message);
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -39,11 +40,19 @@ const CodeIDE = () => {
             id="lang"
             className="bg-zinc-800 px-2 py-1 font-semibold rounded-md text-md"
             value={lang}
-            onChange={(e)=>{setLang(e.target.value)}}
+            onChange={(e) => {
+              setLang(e.target.value as SupportedLangs);
+            }}
           >
-            <option className="bg-zinc-800" value="python">python</option>
-            <option className="bg-zinc-800" value="javascript">javascript</option>
-            <option className="bg-zinc-800" value="cpp">cpp</option>
+            <option className="bg-zinc-800" value="python">
+              python
+            </option>
+            <option className="bg-zinc-800" value="javascript">
+              javascript
+            </option>
+            <option className="bg-zinc-800" value="cpp">
+              cpp
+            </option>
           </select>
           <button
             onClick={handleSubmit}
@@ -60,8 +69,8 @@ const CodeIDE = () => {
           onChange={handleEditorChange}
         />
       </div>
-      <div className="grid grid-rows-3 gap-5 text-zinc-200 col-span-2">
-        <Input input={input} setInput={setInput}/>
+      <div className="grid grid-rows-3 h-full gap-5 text-zinc-200 col-span-2">
+        <Input input={input} setInput={setInput} />
         <Output output={output} loading={loading} />
       </div>
     </div>

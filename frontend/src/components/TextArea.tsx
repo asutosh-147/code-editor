@@ -1,5 +1,5 @@
 import React from "react";
-import { cn } from "../utils/styling";
+import { cn } from "../lib/styling";
 type textAreaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
   text?: string | null;
   className?:string;
