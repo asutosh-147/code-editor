@@ -1,7 +1,7 @@
 import Docker from "dockerode";
 import { dockerRunWithStdIn } from "./stdinDocker";
 import {v4 as uuidv4} from "uuid"
-const docker = new Docker();
+const docker = new Docker({});
 
 export async function runCodeInDocker(
   language: string,
