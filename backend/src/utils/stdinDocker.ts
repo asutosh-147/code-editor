@@ -60,7 +60,7 @@ export async function dockerRunWithStdIn(
                 }
 
                 dockerStream.pipe(attachStream);
-
+                const startTime = Date.now();
                 container.start((err, data) => {
                     if (err) {
                         removeContainer();
@@ -74,7 +74,17 @@ export async function dockerRunWithStdIn(
                         stdin.pipe(dockerStream);
                     }
 
+                    const interval = setInterval(()=>{
+                        const secondsSpent = Math.floor((Date.now() - startTime)/1000);
+                        if(secondsSpent >= 7){
+                            clearInterval(interval);
+                            removeContainer();
+                            resolve(Buffer.from("Time Limit Exceeded"));
+                        }
+                    },500)
+
                     container.wait(async (err, data) => {
+                        clearInterval(interval);
                         if (err) {
                             removeContainer();
                             reject(err);
