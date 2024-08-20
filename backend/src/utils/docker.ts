@@ -4,8 +4,8 @@ import {v4 as uuidv4} from "uuid";
 import dotenv from "dotenv";
 dotenv.config();
 const docker = new Docker({
-  host:'13.60.188.12',
-  port:2375
+  host:process.env.DOCKER_HOST,
+  port:process.env.DOCKER_PORT
 });
 
 export async function runCodeInDocker(
