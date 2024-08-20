@@ -1,9 +1,9 @@
 import Docker from "dockerode";
 import { dockerRunWithStdIn } from "./stdinDocker";
-import {v4 as uuidv4} from "uuid"
+import { v4 as uuidv4 } from "uuid";
 const docker = new Docker({
-  host:process.env.DOCKER_HOST,
-  port:process.env.DOCKER_PORT
+  host: process.env.DOCKER_HOST,
+  port: process.env.DOCKER_PORT,
 });
 
 export async function runCodeInDocker(
@@ -47,13 +47,13 @@ export async function runCodeInDocker(
     const containerName = uuidv4();
 
     //TODO: handle TLE cases
-    
-    const output = await dockerRunWithStdIn(docker,Buffer.from(input),{
+
+    const output = await dockerRunWithStdIn(docker, Buffer.from(input), {
       name: containerName,
-      Image:image,
-      Cmd:["bash", "-c", command]
-    })
-    
+      Image: image,
+      Cmd: ["bash", "-c", command],
+    });
+
     console.log("Code execution finished. with", containerName);
     return output.toString();
   } catch (error: any) {
