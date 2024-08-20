@@ -46,8 +46,6 @@ export async function runCodeInDocker(
       .join(" && ");
     const containerName = uuidv4();
 
-    //TODO: handle TLE cases
-
     const output = await dockerRunWithStdIn(docker, Buffer.from(input), {
       name: containerName,
       Image: image,

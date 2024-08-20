@@ -26,7 +26,6 @@ const CodeIDE = () => {
       });
       setOutput(response.data.output);
     } catch (error: any) {
-      console.log(error.message);
       setOutput(error.message);
     } finally {
       setLoading(false);
@@ -35,19 +34,39 @@ const CodeIDE = () => {
   const handleEditorChange = (value: string | undefined) => {
     if (value) setEditorValue(value);
   };
+
+  const fetchTimeComplexity = async () => {
+    try {
+      setLoading(true);
+      if (!editorValue || !editorValue.length) return;
+      const response = await axios.post(`${backend_url}/api/code/time`, {
+        code: editorValue,
+      });
+      setOutput(response.data.complexity);
+    } catch (error:any) {
+      setOutput(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
-    <div className="grid grid-cols-6 gap-5 p-2 w-full h-full">
-      <div className="flex flex-col items-start col-span-4 text-white">
-        <ToolBar lang={lang} setLang={setLang} onSubmit={handleSubmit} />
+    <div className="grid h-full w-full grid-cols-6 gap-5 p-2">
+      <div className="col-span-4 flex flex-col items-start text-white">
+        <ToolBar
+          lang={lang}
+          setLang={setLang}
+          onSubmit={handleSubmit}
+          getTC={fetchTimeComplexity}
+        />
         <Editor
-          className="shadow-xl border-4 border-white dark:border-[#1e1e1e] rounded-lg"
+          className="rounded-lg border-4 border-white shadow-xl dark:border-[#1e1e1e]"
           height="calc(100vh - 154px)"
-          theme={theme=="dark" ? "vs-dark":"light"}
+          theme={theme == "dark" ? "vs-dark" : "light"}
           language={lang}
           onChange={handleEditorChange}
         />
       </div>
-      <div className="grid grid-rows-3 h-full gap-5 dark:text-zinc-200  col-span-2">
+      <div className="col-span-2 grid h-full grid-rows-3 gap-5 dark:text-zinc-200 pt-7">
         <Input input={input} setInput={setInput} />
         <Output output={output} loading={loading} />
       </div>

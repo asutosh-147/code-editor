@@ -1,5 +1,5 @@
 import { Request, response, Response, Router } from "express";
-import { signUpSchema } from "../lib/zod";
+import { signUpSchema } from "../lib/zod/zod";
 import { prisma } from "../db";
 import jwt from "jsonwebtoken";
 import { jwtSecret } from "../utils/constants";
