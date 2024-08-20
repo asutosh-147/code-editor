@@ -1,5 +1,6 @@
 import { Request, Response, Router } from "express";
 import { runCodeInDocker } from "../utils/docker";
+import { getTimeComplexity } from "../lib/gemini/genai";
 
 export const runner = Router();
 
@@ -13,3 +14,14 @@ runner.post("/run", async (req: Request, res: Response) => {
     return res.status(400).json({ error: "Error in running code" });
   }
 });
+
+runner.post("/time",async (req:Request,res:Response)=>{
+  try {
+    const { code } = req.body as {code:string};
+    const complexity = await getTimeComplexity(code);
+    return res.json({complexity});
+  } catch (error:any) {
+    console.log(error.message);
+    return res.status(400).json({error:"Failed to get Time Complexity"});
+  }
+})

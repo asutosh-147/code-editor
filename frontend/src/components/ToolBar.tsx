@@ -9,12 +9,14 @@ import { useRecoilValue } from "recoil";
 import Tooltip from "./ui/Tooltip";
 import Button from "./ui/Button";
 import Timer from "./Timer";
+import { RiSpeedUpFill } from "react-icons/ri";
 type ToolBarProps = {
   lang: SupportedLangs;
   setLang: Dispatch<SetStateAction<SupportedLangs>>;
   onSubmit: () => void;
+  getTC: () => void;
 };
-const ToolBar = ({ lang, setLang, onSubmit }: ToolBarProps) => {
+const ToolBar = ({ lang, setLang, onSubmit, getTC }: ToolBarProps) => {
   const theme = useRecoilValue(themeAtom);
   const toggleTheme = useToggleTheme();
   const runCodeRef = useRef<HTMLButtonElement | null>(null);
@@ -57,6 +59,10 @@ const ToolBar = ({ lang, setLang, onSubmit }: ToolBarProps) => {
         <FaPlay className="text-xs" />
         <div>Run Code</div>
         <Tooltip title="Ctrl + '" position="top" />
+      </Button>
+      <Button onClick={getTC}>
+        <RiSpeedUpFill className="text-lg" />
+        <Tooltip title="Time Comlexity" position="top" />
       </Button>
       <Button className="p-1 text-lg" onClick={toggleTheme}>
         {theme == "light" ? (
