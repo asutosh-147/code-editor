@@ -1,47 +1,63 @@
-import { RiUserLine } from "react-icons/ri";
 import { FiMail } from "react-icons/fi";
 import { MdLockOutline } from "react-icons/md";
 import { LuEye } from "react-icons/lu";
 import { LuEyeOff } from "react-icons/lu";
-import { useState } from "react";
-// import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "./ui/Button";
 import Input from "./ui/Input";
+import axios from "axios";
+import { backend_url } from "@/lib/constants";
+import { useUser } from "@/store/hooks/useUser";
+import { useSetRecoilState } from "recoil";
+import { userAtom } from "@/store/atoms/user";
 type User = {
-  username: string;
   email: string;
   password: string;
 };
 const Login = () => {
+  const user = useUser();
+  const navigate = useNavigate();
+  const setUser = useSetRecoilState(userAtom);
+
   const [visible, setVisible] = useState(false);
   const [userInfo, setUserInfo] = useState<User>({
-    username: "",
     email: "",
     password: "",
   });
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.name as "username" | "email" | "password";
+    const name = e.target.name as "email" | "password";
     const value = e.target.value as string;
     setUserInfo((prev) => {
       return { ...prev, [name]: value };
     });
   };
+  const handleSubmit = async () => {
+    try {
+      const response = await axios.post(`${backend_url}/api/auth/login`,{
+        email:userInfo.email,
+        password:userInfo.password,
+      },{
+        withCredentials:true,
+      })
+      if(response.status === 200){
+        setUser(response.data);
+        navigate("/editor")
+      }
+    } catch (error:any) {
+      console.log(error.message) 
+    }
+  }
+  useEffect(()=>{
+    if(user) navigate("/editor");
+  },[user,navigate])
   return (
     <div className="mt-10 flex w-full items-center justify-center">
-      <div className="grid grid-cols-2 rounded-xl bg-zinc-400">
+      <div className="grid grid-cols-2 rounded-xl bg-zinc-300">
         <img src="/authImage.png" alt="authimage" className="w-auto max-w-72" />
-        <div className="flex w-72 flex-col items-center gap-10 px-9 pt-6">
+        <div className="flex w-72 flex-col items-center justify-around gap-10 px-9 pt-6">
           <div className="text-3xl font-bold">Login</div>
           <div className="flex flex-col items-start gap-3">
-            <Input
-              value={userInfo.username}
-              type="text"
-              name="username"
-              label="Username"
-              onChange={handleChange}
-            >
-              <RiUserLine className="absolute left-2 top-2" />
-            </Input>
             <Input
               type="email"
               name="email"
@@ -72,12 +88,12 @@ const Login = () => {
               )}
             </Input>
           </div>
-          <Button className="text-white w-full justify-center">Submit</Button>
+          <Button className="text-white w-full justify-center" onClick={handleSubmit}>Submit</Button>
           <div className="text-xs">
             Already have an Account?{" "}
-            {/* <Link to={"/signin"}> */}
+            <Link to={"/signup"}>
               <b>SignUp</b>
-            {/* </Link> */}
+            </Link>
           </div>
         </div>
       </div>

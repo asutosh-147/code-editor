@@ -1,14 +1,18 @@
 import { Editor } from "@monaco-editor/react";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { backend_url, SupportedLangs } from "../lib/constants";
 import Input from "./Input";
 import Output from "./Output";
 import ToolBar from "./ToolBar";
 import { useRecoilValue } from "recoil";
 import { themeAtom } from "@/store/atoms/theme";
+import { useUser } from "@/store/hooks/useUser";
+import { useNavigate } from "react-router-dom";
 
 const CodeIDE = () => {
+  const user = useUser();
+  const navigate = useNavigate();
   const [editorValue, setEditorValue] = useState<string | null>(null);
   const theme = useRecoilValue(themeAtom);
   const [input, setInput] = useState<string>("");
@@ -49,6 +53,11 @@ const CodeIDE = () => {
       setLoading(false);
     }
   };
+  useEffect(()=>{
+    if(!user){
+      navigate("/login");
+    }
+  },[user,navigate])
   return (
     <div className="grid h-full w-full grid-cols-6 gap-5 p-2">
       <div className="col-span-4 flex flex-col items-start text-white">

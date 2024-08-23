@@ -25,12 +25,14 @@ authRouter.post("/signup", async (req: Request, res: Response) => {
     parsedBody.data.password = await genHash(parsedBody.data.password);
     const user = await prisma.user.upsert({
       where: {
-        email:parsedBody.data.email,
+        email: parsedBody.data.email,
       },
       create: parsedBody.data,
       update: parsedBody.data,
     });
-    const token = jwt.sign({ userId: user.id }, jwtSecret, {expiresIn:'10m'});
+    const token = jwt.sign({ userId: user.id }, jwtSecret, {
+      expiresIn: "10m",
+    });
     sendMailtoUser(parsedBody.data.email, token, parsedBody.data.name);
     return res.json({ msg: "Verification Email Sent Successfully" });
   } catch (error: any) {
@@ -51,16 +53,20 @@ authRouter.post("/login", async (req: Request, res: Response) => {
     });
 
     if (!user) return res.status(403).json({ error: "User Doesn't Exist" });
-    const isPasswordCorrect = await compareHash(parsedBody.data.password,user.password);
-    if(!isPasswordCorrect) return res.status(403).json({error:"Incorrect Credentials"});
+    const isPasswordCorrect = await compareHash(
+      parsedBody.data.password,
+      user.password
+    );
+    if (!isPasswordCorrect)
+      return res.status(403).json({ error: "Incorrect Credentials" });
 
     const token = jwt.sign({ userId: user.id }, jwtSecret);
+
     res.cookie("token", token, {
       httpOnly: true,
-      sameSite: "lax",
     });
 
-    return res.json({ msg: "Login Successful" });
+    return res.json({ email: user.email, name: user.name });
   } catch (error: any) {
     return res.status(400).json({ error: error.message });
   }
@@ -98,10 +104,33 @@ authRouter.get("/verify/:token", async (req: Request, res: Response) => {
       },
     });
     const newToken = jwt.sign({ userId }, jwtSecret);
-    res.cookie("token", newToken, { httpOnly: true, sameSite: "lax" });
-    return res.json({ msg: "Email Verification Successful" });
-  } catch (error:any) {
-    console.log(error.message)
-    return res.status(403).json({error:"Error in verifying token"});
+    res.cookie("token", newToken, { httpOnly: true });
+    res.redirect("http://localhost:5173/editor");
+    return;
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(403).json({ error: "Error in verifying token" });
+  }
+});
+
+authRouter.get("/refresh", async (req: Request, res: Response) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) return res.status(403).json({ error: "Unauthorized" });
+    const decodedToken = jwt.verify(token, jwtSecret) as JwtPayload;
+    const user = await prisma.user.findFirst({
+      where: { id: decodedToken.userId },
+      select: {
+        email: true,
+        name: true,
+        verified: true,
+      },
+    });
+    if (!user || !user.verified)
+      return res.status(403).json({ error: "Unauthorized" });
+    return res.json({ email: user.email, name: user.name });
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(400).json({ error: "error in verifying" });
   }
 });
