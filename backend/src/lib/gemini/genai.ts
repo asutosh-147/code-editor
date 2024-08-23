@@ -1,7 +1,6 @@
-import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-dotenv.config();
-const genAI = new GoogleGenerativeAI(process.env.API_KEY || "myapikey");
+import { genAPIKEY } from "../../utils/constants";
+const genAI = new GoogleGenerativeAI(genAPIKEY || "myapikey");
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 export const getTimeComplexity = async (code:string) => {

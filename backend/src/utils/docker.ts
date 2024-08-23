@@ -1,11 +1,10 @@
 import Docker from "dockerode";
 import { dockerRunWithStdIn } from "./stdinDocker";
 import {v4 as uuidv4} from "uuid";
-import dotenv from "dotenv";
-dotenv.config();
+import { dockerHost, dockerPass } from "./constants";
 const docker = new Docker({
-  host:process.env.DOCKER_HOST,
-  port:process.env.DOCKER_PORT
+  host:dockerHost,
+  port:dockerPass
 });
 
 export async function runCodeInDocker(

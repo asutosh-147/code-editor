@@ -24,15 +24,16 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^6.9.14",
     "uuid": "^10.0.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/uuid": "^10.0.0",
-    "typescript": "^5.5.4",
     "@types/cookie-parser": "^1.4.7",
     "@types/jsonwebtoken": "^9.0.6",
+    "@types/nodemailer": "^6.4.15",
     "@types/uuid": "^10.0.0",
-    "prisma": "^5.18.0"
+    "prisma": "^5.18.0",
+    "typescript": "^5.5.4"
   }
 }
