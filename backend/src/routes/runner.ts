@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { runCodeInDocker } from "../utils/docker";
+import { runCodeInDocker } from "../lib/utils/docker";
 import { getTimeComplexity } from "../lib/gemini/genai";
 
 export const runner = Router();
@@ -15,7 +15,7 @@ runner.post("/run", async (req: Request, res: Response) => {
   }
 });
 
-runner.post("/time",async (req:Request,res:Response)=>{
+runner.post("/time", async (req:Request,res:Response) => {
   try {
     const { code } = req.body as {code:string};
     const complexity = await getTimeComplexity(code);

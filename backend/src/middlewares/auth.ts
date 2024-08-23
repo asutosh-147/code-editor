@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
-import { jwtSecret } from "../utils/constants";
+import { jwtSecret } from "../lib/utils/constants";
 export const authMiddleware = (req:Request,res:Response,next:NextFunction) => {
     try {
         const token = req.cookies.token;

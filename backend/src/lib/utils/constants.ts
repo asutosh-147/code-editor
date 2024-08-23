@@ -6,3 +6,4 @@ export const myPass = process.env.PASS;
 export const dockerHost = process.env.DOCKER_HOST;
 export const dockerPass = process.env.DOCKER_PORT;
 export const genAPIKEY = process.env.API_KEY;
+export const saltRounds = process.env.SALT_ROUNDS;
