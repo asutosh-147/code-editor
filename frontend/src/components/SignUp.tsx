@@ -120,7 +120,7 @@ const SignUp = () => {
           </div>
         </div>
       ) : (
-        <div>Please Check your email and verify!!!</div>
+        <div className="flex justify-center items-center">Please Check your email and verify!!!</div>
       )}
     </div>
   );

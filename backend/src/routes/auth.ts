@@ -2,7 +2,7 @@ import { Request, response, Response, Router } from "express";
 import { signUpSchema } from "../lib/zod/zod";
 import { prisma } from "../db";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { backendURL, jwtSecret } from "../lib/utils/constants";
+import { frontendURL, jwtSecret } from "../lib/utils/constants";
 import { sendMailtoUser } from "../lib/utils/nodemailer";
 import { compareHash, genHash } from "../lib/utils/hashing";
 
@@ -106,7 +106,7 @@ authRouter.get("/verify/:token", async (req: Request, res: Response) => {
     });
     const newToken = jwt.sign({ userId }, jwtSecret);
     res.cookie("token", newToken, { httpOnly: true });
-    res.redirect(`${backendURL}/editor`);
+    res.redirect(`${frontendURL}/editor`);
     return;
   } catch (error: any) {
     console.log(error.message);
