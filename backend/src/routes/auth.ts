@@ -2,7 +2,7 @@ import { Request, response, Response, Router } from "express";
 import { signUpSchema } from "../lib/zod/zod";
 import { prisma } from "../db";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { jwtSecret } from "../lib/utils/constants";
+import { backendURL, jwtSecret } from "../lib/utils/constants";
 import { sendMailtoUser } from "../lib/utils/nodemailer";
 import { compareHash, genHash } from "../lib/utils/hashing";
 
@@ -88,6 +88,7 @@ authRouter.get("/verify/:token", async (req: Request, res: Response) => {
     const token = req.params.token;
     const decodedToken = jwt.verify(token, jwtSecret) as JwtPayload;
     const userId = decodedToken.userId;
+    console.log(userId);
     const user = await prisma.user.findUnique({
       where: {
         id: userId,
@@ -105,7 +106,7 @@ authRouter.get("/verify/:token", async (req: Request, res: Response) => {
     });
     const newToken = jwt.sign({ userId }, jwtSecret);
     res.cookie("token", newToken, { httpOnly: true });
-    res.redirect("http://localhost:5173/editor");
+    res.redirect(`${backendURL}/editor`);
     return;
   } catch (error: any) {
     console.log(error.message);

@@ -8,3 +8,4 @@ export const dockerHost = process.env.DOCKER_HOST;
 export const dockerPort = process.env.DOCKER_PORT;
 export const genAPIKEY = process.env.API_KEY;
 export const saltRounds = process.env.SALT_ROUNDS;
+export const backendURL = process.env.BACKEND_URL;

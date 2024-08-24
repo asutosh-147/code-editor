@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { myEmail, myPass } from "./constants";
+import { backendURL, myEmail, myPass } from "./constants";
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   host: "smtp.gmail.com",
@@ -21,7 +21,7 @@ export const sendMailtoUser = async (
               from: myEmail,
               to: toEmail,
               subject: "Verify Your Email",
-              text: `Hello ${name} Please Verify Your Email by Clicking on This Link http://localhost:3000/api/auth/verify/${token}`,
+              text: `Hello ${name} Please Verify Your Email by Clicking on This Link ${backendURL}/api/auth/verify/${token}`,
             };
     
             transporter.sendMail(mailConfig,(err,info) => {
