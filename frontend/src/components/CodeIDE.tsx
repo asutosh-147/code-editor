@@ -73,50 +73,52 @@ const CodeIDE = () => {
     }
   }, [user, navigate]);
   return (
-    <ResizablePanelGroup
-      direction="horizontal"
-      className="grid min-h-screen w-full grid-cols-6 gap-[0.08rem] p-1"
-    >
-      <ResizablePanel
-        defaultSize={75}
-        className="col-span-4 flex flex-col items-start text-white"
-      >
-        <ToolBar
-          lang={lang}
-          setLang={setLang}
-          onSubmit={handleSubmit}
-          getTC={fetchTimeComplexity}
-        />
-        <Editor
-          className="rounded-lg border-4 border-white shadow-xl dark:border-[#1e1e1e]"
-          height="100%"
-          theme={theme == "dark" ? "vs-dark" : "light"}
-          language={lang}
-          onChange={handleEditorChange}
-        />
-      </ResizablePanel>
-      <ResizableHandle
-        withHandle
-        className="border-none bg-gray-300 dark:bg-zinc-700"
+    <div className="flex h-screen flex-col items-center">
+      <ToolBar
+        lang={lang}
+        setLang={setLang}
+        onSubmit={handleSubmit}
+        getTC={fetchTimeComplexity}
       />
-      <ResizablePanel defaultSize={25}>
-        <ResizablePanelGroup
-          direction="vertical"
-          className="col-span-2 flex min-h-full flex-col pt-16 dark:text-zinc-200"
+      <ResizablePanelGroup
+        direction="horizontal"
+        className="grid h-full w-full flex-1 grid-cols-6 gap-[0.01rem] p-1"
+      >
+        <ResizablePanel
+          defaultSize={75}
+          className="col-span-4 flex flex-col items-start text-white"
         >
-          <ResizablePanel defaultSize={25}>
-            <Input input={input} setInput={setInput} />
-          </ResizablePanel>
-          <ResizableHandle
-            withHandle
-            className="border-none bg-gray-300 dark:bg-zinc-700"
+          <Editor
+            className="rounded-lg border-4 border-white shadow-xl dark:border-[#1e1e1e]"
+            height="100%"
+            theme={theme == "dark" ? "vs-dark" : "light"}
+            language={lang}
+            onChange={handleEditorChange}
           />
-          <ResizablePanel defaultSize={75}>
-            <Output output={output} loading={loading} />
-          </ResizablePanel>
-        </ResizablePanelGroup>
-      </ResizablePanel>
-    </ResizablePanelGroup>
+        </ResizablePanel>
+        <ResizableHandle
+          withHandle
+          className="border-none bg-gray-300 active:bg-cyan-500 dark:bg-zinc-700 active:dark:bg-cyan-500"
+        />
+        <ResizablePanel defaultSize={25}>
+          <ResizablePanelGroup
+            direction="vertical"
+            className="col-span-2 flex min-h-full flex-col dark:text-zinc-200"
+          >
+            <ResizablePanel defaultSize={25}>
+              <Input input={input} setInput={setInput} />
+            </ResizablePanel>
+            <ResizableHandle
+              withHandle
+              className="border-none bg-gray-300 active:bg-blue-600 dark:bg-zinc-700 active:dark:bg-green-400"
+            />
+            <ResizablePanel defaultSize={75}>
+              <Output output={output} loading={loading} />
+            </ResizablePanel>
+          </ResizablePanelGroup>
+        </ResizablePanel>
+      </ResizablePanelGroup>
+    </div>
   );
 };
 
