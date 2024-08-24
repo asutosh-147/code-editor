@@ -52,7 +52,7 @@ authRouter.post("/login", async (req: Request, res: Response) => {
       },
     });
 
-    if (!user) return res.status(403).json({ error: "User Doesn't Exist" });
+    if (!user || !user.verified) return res.status(403).json({ error: "User Doesn't Exist or Not verified" });
     const isPasswordCorrect = await compareHash(
       parsedBody.data.password,
       user.password
