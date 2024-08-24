@@ -72,7 +72,7 @@ authRouter.post("/login", async (req: Request, res: Response) => {
   }
 });
 
-authRouter.post("/logout", async (req: Request, res: Response) => {
+authRouter.get("/logout", async (req: Request, res: Response) => {
   try {
     const token = req.cookies.token;
     if (!token) return res.status(403).json({ error: "Token Not Found" });

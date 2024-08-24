@@ -6,7 +6,7 @@ type AuthUser = {
   name?: string;
   email: string;
 };
-export const userAtom = atom<AuthUser>({
+export const userAtom = atom<AuthUser | null>({
   key: "userAtom",
   default: selector({
     key: "user/default",
@@ -20,6 +20,7 @@ export const userAtom = atom<AuthUser>({
       } catch (error: any) {
         console.log(error.message);
       }
+
       return null;
     },
   }),

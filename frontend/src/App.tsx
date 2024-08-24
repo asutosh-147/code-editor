@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SignUp from "./components/SignUp";
 import Login from "./components/Login";
 import Landing from "./components/Landing";
+import Layout from "./components/Layout";
 const App = () => {
   return (
     <RecoilRoot>
@@ -24,10 +25,17 @@ const AuthApp = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Landing />} />
+        <Route
+          path="/"
+          element={
+            <Layout>
+              <Landing />
+            </Layout>
+          }
+        />
         <Route path="/editor" element={<CodeIDE />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Layout children={<SignUp />} />} />
+        <Route path="/login" element={<Layout children={<Login />} />} />
       </Routes>
     </BrowserRouter>
   );

@@ -31,7 +31,7 @@ const ToolBar = ({ lang, setLang, onSubmit, getTC }: ToolBarProps) => {
   }, []);
 
   return (
-    <div className="flex w-full items-center justify-center gap-2 p-2 pt-5">
+    <div className="flex w-full items-center justify-center gap-2 p-2 pt-7">
       <Timer/>
       <div className="group relative">
         <select

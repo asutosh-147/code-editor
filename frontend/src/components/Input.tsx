@@ -11,6 +11,7 @@ const Input = ({ input, setInput }: InputProps) => {
       <TextArea
         id="input"
         name="input"
+        className="rounded-b-none"
         placeholder="Your Inputs Here..."
         text={input}
         onChange={(e) => {

@@ -2,10 +2,7 @@ import Docker from "dockerode";
 import { dockerRunWithStdIn } from "./stdinDocker";
 import {v4 as uuidv4} from "uuid";
 import { dockerHost, dockerPass } from "./constants";
-const docker = new Docker({
-  host:dockerHost,
-  port:dockerPass
-});
+const docker = new Docker();
 
 export async function runCodeInDocker(
   language: string,

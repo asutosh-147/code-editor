@@ -52,7 +52,7 @@ const Login = () => {
     if(user) navigate("/editor");
   },[user,navigate])
   return (
-    <div className="mt-10 flex w-full items-center justify-center">
+    <div className="pt-10 flex w-full items-center justify-center">
       <div className="grid grid-cols-2 rounded-xl bg-zinc-300">
         <img src="/authImage.png" alt="authimage" className="w-auto max-w-72" />
         <div className="flex w-72 flex-col items-center justify-around gap-10 px-9 pt-6">

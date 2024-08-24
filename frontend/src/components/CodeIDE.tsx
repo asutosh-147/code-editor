@@ -27,11 +27,17 @@ const CodeIDE = () => {
     try {
       if (!editorValue || !editorValue.length) return;
       setLoading(true);
-      const response = await axios.post(`${backend_url}/api/code/run`, {
-        language: lang,
-        code: editorValue,
-        input,
-      });
+      const response = await axios.post(
+        `${backend_url}/api/code/run`,
+        {
+          language: lang,
+          code: editorValue,
+          input,
+        },
+        {
+          withCredentials: true,
+        },
+      );
       setOutput(response.data.output);
     } catch (error: any) {
       setOutput(error.message);
@@ -47,9 +53,13 @@ const CodeIDE = () => {
     try {
       setLoading(true);
       if (!editorValue || !editorValue.length) return;
-      const response = await axios.post(`${backend_url}/api/code/time`, {
-        code: editorValue,
-      });
+      const response = await axios.post(
+        `${backend_url}/api/code/time`,
+        {
+          code: editorValue,
+        },
+        { withCredentials: true },
+      );
       setOutput(response.data.complexity);
     } catch (error: any) {
       setOutput(error.message);
@@ -65,7 +75,7 @@ const CodeIDE = () => {
   return (
     <ResizablePanelGroup
       direction="horizontal"
-      className="grid min-h-screen w-full grid-cols-6 p-2"
+      className="grid min-h-screen w-full grid-cols-6 gap-[0.08rem] p-1"
     >
       <ResizablePanel
         defaultSize={75}
@@ -87,19 +97,19 @@ const CodeIDE = () => {
       </ResizablePanel>
       <ResizableHandle
         withHandle
-        className="border-none bg-gray-300 ring-0 focus:ring-0 focus-visible:ring-0 dark:bg-zinc-700"
+        className="border-none bg-gray-300 dark:bg-zinc-700"
       />
       <ResizablePanel defaultSize={25}>
         <ResizablePanelGroup
           direction="vertical"
-          className="col-span-2 flex min-h-full flex-col pt-14 dark:text-zinc-200"
+          className="col-span-2 flex min-h-full flex-col pt-16 dark:text-zinc-200"
         >
           <ResizablePanel defaultSize={25}>
             <Input input={input} setInput={setInput} />
           </ResizablePanel>
           <ResizableHandle
             withHandle
-            className="border-none bg-gray-300 ring-0 focus:ring-0 focus-visible:ring-0 dark:bg-zinc-700"
+            className="border-none bg-gray-300 dark:bg-zinc-700"
           />
           <ResizablePanel defaultSize={75}>
             <Output output={output} loading={loading} />
