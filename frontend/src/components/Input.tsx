@@ -6,8 +6,8 @@ type InputProps = {
 };
 const Input = ({ input, setInput }: InputProps) => {
   return (
-    <div className="flex flex-col gap-1 row-span-2">
-      <div className="font-bold tracking-wide">Input</div>
+    <div className="flex flex-col gap-1 row-span-2 h-full w-full relative">
+      <div className="font-bold tracking-wide absolute top-1 right-2">Input</div>
       <TextArea
         id="input"
         name="input"

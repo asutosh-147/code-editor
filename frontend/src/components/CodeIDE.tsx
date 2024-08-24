@@ -9,7 +9,11 @@ import { useRecoilValue } from "recoil";
 import { themeAtom } from "@/store/atoms/theme";
 import { useUser } from "@/store/hooks/useUser";
 import { useNavigate } from "react-router-dom";
-
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 const CodeIDE = () => {
   const user = useUser();
   const navigate = useNavigate();
@@ -47,20 +51,26 @@ const CodeIDE = () => {
         code: editorValue,
       });
       setOutput(response.data.complexity);
-    } catch (error:any) {
+    } catch (error: any) {
       setOutput(error.message);
     } finally {
       setLoading(false);
     }
   };
-  useEffect(()=>{
-    if(!user){
+  useEffect(() => {
+    if (!user) {
       navigate("/login");
     }
-  },[user,navigate])
+  }, [user, navigate]);
   return (
-    <div className="grid h-full w-full grid-cols-6 gap-5 p-2">
-      <div className="col-span-4 flex flex-col items-start text-white">
+    <ResizablePanelGroup
+      direction="horizontal"
+      className="grid min-h-screen w-full grid-cols-6 p-2"
+    >
+      <ResizablePanel
+        defaultSize={75}
+        className="col-span-4 flex flex-col items-start text-white"
+      >
         <ToolBar
           lang={lang}
           setLang={setLang}
@@ -69,17 +79,34 @@ const CodeIDE = () => {
         />
         <Editor
           className="rounded-lg border-4 border-white shadow-xl dark:border-[#1e1e1e]"
-          height="calc(100vh - 154px)"
+          height="100%"
           theme={theme == "dark" ? "vs-dark" : "light"}
           language={lang}
           onChange={handleEditorChange}
         />
-      </div>
-      <div className="col-span-2 grid h-full grid-rows-3 gap-5 dark:text-zinc-200 pt-7">
-        <Input input={input} setInput={setInput} />
-        <Output output={output} loading={loading} />
-      </div>
-    </div>
+      </ResizablePanel>
+      <ResizableHandle
+        withHandle
+        className="border-none bg-gray-300 ring-0 focus:ring-0 focus-visible:ring-0 dark:bg-zinc-700"
+      />
+      <ResizablePanel defaultSize={25}>
+        <ResizablePanelGroup
+          direction="vertical"
+          className="col-span-2 flex min-h-full flex-col pt-14 dark:text-zinc-200"
+        >
+          <ResizablePanel defaultSize={25}>
+            <Input input={input} setInput={setInput} />
+          </ResizablePanel>
+          <ResizableHandle
+            withHandle
+            className="border-none bg-gray-300 ring-0 focus:ring-0 focus-visible:ring-0 dark:bg-zinc-700"
+          />
+          <ResizablePanel defaultSize={75}>
+            <Output output={output} loading={loading} />
+          </ResizablePanel>
+        </ResizablePanelGroup>
+      </ResizablePanel>
+    </ResizablePanelGroup>
   );
 };
 
