@@ -7,10 +7,13 @@ import SignUp from "./components/SignUp";
 import Login from "./components/Login";
 import Landing from "./components/Landing";
 import Layout from "./components/Layout";
+import { Toaster } from "sonner";
+
 const App = () => {
   return (
     <RecoilRoot>
       <Suspense fallback={<div>Loading...</div>}>
+        <Toaster />
         <AuthApp />
       </Suspense>
     </RecoilRoot>

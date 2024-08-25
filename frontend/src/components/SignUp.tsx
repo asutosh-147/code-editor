@@ -10,33 +10,24 @@ import Input from "./ui/Input";
 import { useUser } from "@/store/hooks/useUser";
 import { backend_url } from "@/lib/constants";
 import axios from "axios";
-type User = {
-  name: string;
-  email: string;
-  password: string;
-};
+import { signUpSchema, signUpType } from "@/lib/zod";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import FormError from "./FormError";
 const SignUp = () => {
   const user = useUser();
   const navigate = useNavigate();
-  useEffect(() => {
-    if (user) navigate("/editor");
-  }, [user, navigate]);
-
   const [emailSent, setEmailSent] = useState(false);
   const [visible, setVisible] = useState(false);
-  const [userInfo, setUserInfo] = useState<User>({
-    name: "",
-    email: "",
-    password: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<signUpType>({
+    resolver: zodResolver(signUpSchema),
   });
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.name as "name" | "email" | "password";
-    const value = e.target.value as string;
-    setUserInfo((prev) => {
-      return { ...prev, [name]: value };
-    });
-  };
-  const handleSubmit = async () => {
+  const handleSignUp = async (userInfo: signUpType) => {
     try {
       const response = await axios.post(
         `${backend_url}/api/auth/signup`,
@@ -51,45 +42,47 @@ const SignUp = () => {
         setEmailSent(true);
       }
     } catch (error: any) {
+      toast(error.response.data.error);
       console.log(error.message);
     }
   };
+
+  useEffect(() => {
+    if (user) navigate("/editor");
+  }, [user, navigate]);
   return (
-    <div className="pt-10 flex w-full items-center justify-center">
+    <div className="flex w-full items-center justify-center pt-10">
       {!emailSent ? (
-        <div className="grid grid-cols-2 rounded-xl bg-zinc-300 shadow-xl">
-          <img
-            src="/authImage.png"
-            alt="authimage"
-            className="w-auto max-w-72"
-          />
-          <div className="flex w-72 flex-col items-center gap-10 px-9 pt-6">
+        <div className="flex rounded-xl bg-zinc-300 shadow-2xl">
+          <img src="/authImage.jpg" alt="authimage" className="w-[35rem] flex-1 rounded-l-md" />
+          <form
+            onSubmit={handleSubmit(handleSignUp)}
+            className="flex w-72 flex-col items-center gap-8 px-9 pt-5"
+          >
             <div className="text-3xl font-bold">Signup</div>
             <div className="flex flex-col items-start gap-3">
               <Input
-                value={userInfo.name}
+                {...register("name")}
                 type="text"
                 name="name"
                 label="Username"
-                onChange={handleChange}
               >
                 <RiUserLine className="absolute left-2 top-2" />
               </Input>
               <Input
+                {...register("email")}
+                required
                 type="email"
                 name="email"
-                value={userInfo.email}
                 label="Email"
-                onChange={handleChange}
               >
                 <FiMail className="absolute left-2 top-2" />
               </Input>
               <Input
+                {...register("password")}
                 type={`${visible ? "text" : "password"}`}
                 name="password"
                 label="Password"
-                value={userInfo.password}
-                onChange={handleChange}
               >
                 <MdLockOutline className="absolute left-2 top-2" />
                 {visible ? (
@@ -105,9 +98,15 @@ const SignUp = () => {
                 )}
               </Input>
             </div>
+            <div>
+              {errors.name && <FormError error={errors.name.message} />}
+              {errors.email && <FormError error={errors.email.message} />}
+              {errors.password && <FormError error={errors.password.message} />}
+            </div>
             <Button
               className="w-full justify-center text-white"
-              onClick={handleSubmit}
+              type="submit"
+              loading={isSubmitting}
             >
               Signup
             </Button>
@@ -117,10 +116,13 @@ const SignUp = () => {
                 <b>Login</b>
               </Link>
             </div>
-          </div>
+          </form>
         </div>
       ) : (
-        <div className="flex justify-center items-center bg-zinc-200 p-10 font-bold rounded-md text-center">Please Check your email and verify your Email !!! <br />(if not found check in spam folder)</div>
+        <div className="flex items-center justify-center rounded-md bg-zinc-200 p-10 text-center font-bold">
+          Please Check your email and verify your Email !!! <br />
+          (if not found check in spam folder)
+        </div>
       )}
     </div>
   );
