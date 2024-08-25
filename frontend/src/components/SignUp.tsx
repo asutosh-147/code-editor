@@ -119,8 +119,8 @@ const SignUp = () => {
           </form>
         </div>
       ) : (
-        <div className="flex items-center justify-center rounded-md bg-zinc-200 p-10 text-center font-bold">
-          Please Check your email and verify your Email !!! <br />
+        <div className="flex items-center justify-center rounded-md bg-zinc-200 p-10 text-center font-bold capitalize">
+          We have sent you a verification email please check and verify!!! <br />
           (if not found check in spam folder)
         </div>
       )}
