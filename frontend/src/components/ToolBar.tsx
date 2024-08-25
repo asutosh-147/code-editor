@@ -5,11 +5,13 @@ import { Dispatch, SetStateAction, useEffect, useRef } from "react";
 import { FaPlay } from "react-icons/fa";
 import { IoMdMoon } from "react-icons/io";
 import { MdLightMode } from "react-icons/md";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import Tooltip from "./ui/Tooltip";
 import Button from "./ui/Button";
 import Timer from "./Timer";
 import { RiSpeedUpFill } from "react-icons/ri";
+import { RxHamburgerMenu } from "react-icons/rx";
+import { sideBarAtom } from "@/store/atoms/sidebar";
 type ToolBarProps = {
   lang: SupportedLangs;
   setLang: Dispatch<SetStateAction<SupportedLangs>>;
@@ -19,6 +21,7 @@ type ToolBarProps = {
 const ToolBar = ({ lang, setLang, onSubmit, getTC }: ToolBarProps) => {
   const theme = useRecoilValue(themeAtom);
   const toggleTheme = useToggleTheme();
+  const setSideBar = useSetRecoilState(sideBarAtom);
   const runCodeRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -31,8 +34,15 @@ const ToolBar = ({ lang, setLang, onSubmit, getTC }: ToolBarProps) => {
   }, []);
 
   return (
-    <div className="flex w-full items-center justify-center gap-2 p-2 pt-7 dark:text-zinc-200">
-      <Timer/>
+    <div className="flex w-full items-center justify-center gap-2 p-2 pt-7 text-zinc-50 dark:text-zinc-200">
+      <Button
+        onClick={() => setSideBar((prev) => !prev)}
+        className="p-1 text-lg dark:text-white"
+      >
+        <RxHamburgerMenu />
+        <Tooltip title="Sidebar" position="top" />
+      </Button>
+      <Timer />
       <div className="group relative">
         <select
           name="Language"

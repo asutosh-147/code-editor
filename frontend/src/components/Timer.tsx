@@ -33,7 +33,7 @@ const Timer = () => {
       {time == -1 ? (
         <Button
           onClick={handleStartTimer}
-          className="group relative p-1 text-lg"
+          className="p-1 text-lg"
         >
           <PiTimerFill className="dark:text-zinc-200" />
           <Tooltip position="top" title="Start" />

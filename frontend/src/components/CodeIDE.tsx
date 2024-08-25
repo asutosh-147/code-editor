@@ -14,6 +14,9 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import SideBar from "./SideBar";
+import { sideBarAtom } from "@/store/atoms/sidebar";
+import { AnimatePresence } from "framer-motion";
 const CodeIDE = () => {
   const user = useUser();
   const navigate = useNavigate();
@@ -23,6 +26,7 @@ const CodeIDE = () => {
   const [output, setOutput] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [lang, setLang] = useState<SupportedLangs>("python");
+  const isSideBarOpen = useRecoilValue(sideBarAtom);
   const handleSubmit = async () => {
     try {
       if (!editorValue || !editorValue.length) return;
@@ -74,6 +78,7 @@ const CodeIDE = () => {
   }, [user, navigate]);
   return (
     <div className="flex h-screen flex-col items-center">
+      <AnimatePresence>{isSideBarOpen && <SideBar />}</AnimatePresence>
       <ToolBar
         lang={lang}
         setLang={setLang}
