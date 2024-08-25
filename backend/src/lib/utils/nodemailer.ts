@@ -3,7 +3,7 @@ import { backendURL, myEmail, myPass } from "./constants";
 const transporter = nodemailer.createTransport({
   service: "Gmail",
   host: "smtp.gmail.com",
-  secure: false,
+  secure: true,
   auth: {
     user: myEmail,
     pass: myPass,
@@ -18,10 +18,10 @@ export const sendMailtoUser = async (
     try {
         return await new Promise<void>((res,rej) => {
             const mailConfig = {
-              from: myEmail,
+              from: `"CodingKoala" <${myEmail}>`,
               to: toEmail,
-              subject: "Verify Your Email",
-              text: `Hello ${name} Please Verify Your Email by Clicking on This Link ${backendURL}/api/auth/verify/${token}`,
+              subject: "Action Required: Verify Your Email Address",
+              text: `Dear ${name || 'User'},\n\nThank you for registering with us. Please verify your email address by clicking on the link below:\n\n${backendURL}/api/auth/verify/${token}\n\nIf you did not request this verification, please ignore this email.\n\nBest regards,\nCodingkoala.ninja`,
             };
     
             transporter.sendMail(mailConfig,(err,info) => {
