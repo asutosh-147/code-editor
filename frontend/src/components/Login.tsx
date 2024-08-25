@@ -53,7 +53,7 @@ const Login = () => {
   },[user,navigate])
   return (
     <div className="pt-10 flex w-full items-center justify-center">
-      <div className="grid grid-cols-2 rounded-xl bg-zinc-300">
+      <div className="grid grid-cols-2 rounded-xl bg-zinc-300 shadow-xl">
         <img src="/authImage.png" alt="authimage" className="w-auto max-w-72" />
         <div className="flex w-72 flex-col items-center justify-around gap-10 px-9 pt-6">
           <div className="text-3xl font-bold">Login</div>

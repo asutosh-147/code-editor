@@ -57,7 +57,7 @@ const SignUp = () => {
   return (
     <div className="pt-10 flex w-full items-center justify-center">
       {!emailSent ? (
-        <div className="grid grid-cols-2 rounded-xl bg-zinc-300">
+        <div className="grid grid-cols-2 rounded-xl bg-zinc-300 shadow-xl">
           <img
             src="/authImage.png"
             alt="authimage"
@@ -120,7 +120,7 @@ const SignUp = () => {
           </div>
         </div>
       ) : (
-        <div className="flex justify-center items-center">Please Check your email and verify!!!</div>
+        <div className="flex justify-center items-center bg-zinc-200 p-10 font-bold rounded-md text-center">Please Check your email and verify your Email !!! <br />(if not found check in spam folder)</div>
       )}
     </div>
   );
