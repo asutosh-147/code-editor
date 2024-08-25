@@ -45,7 +45,7 @@ authRouter.post("/login", async (req: Request, res: Response) => {
   try {
     const parsedBody = signUpSchema.safeParse(req.body);
     if (!parsedBody.success)
-      return res.status(403).json({ error: "Invalid Input" });
+      return res.status(403).json({ error: "Incorrect Credentials" });
     const user = await prisma.user.findUnique({
       where: {
         email: parsedBody.data.email,
