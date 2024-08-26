@@ -1,10 +1,10 @@
 import { PiTimerFill } from "react-icons/pi";
 import Button from "./ui/Button";
-import { useRef, useState } from "react";
+import { memo, useCallback, useRef, useState } from "react";
 import { GrPowerReset } from "react-icons/gr";
 import Tooltip from "./ui/Tooltip";
 
-const Timer = () => {
+const Timer = memo(() => {
   const [time, setTime] = useState<number>(-1);
   const intervalRef = useRef<null | NodeJS.Timeout>(null);
   const handleStartTimer = () => {
@@ -28,6 +28,13 @@ const Timer = () => {
     const secs = getFormatedTime(seconds % (60 * 10));
     return `${hrs}:${mins}:${secs}`;
   };
+  const resetCallback = useCallback(() => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    setTime(-1);
+  },[intervalRef,setTime])
   return (
     <>
       {time == -1 ? (
@@ -48,13 +55,7 @@ const Timer = () => {
             <Tooltip position="top" title={"Pause/Resume"} />
           </Button>
           <Button
-            onClick={() => {
-              if (intervalRef.current) {
-                clearInterval(intervalRef.current);
-                intervalRef.current = null;
-              }
-              setTime(-1);
-            }}
+            onClick={resetCallback}
             className="group relative px-2"
           >
             <GrPowerReset className="dark:text-zinc-200" />
@@ -64,6 +65,6 @@ const Timer = () => {
       )}
     </>
   );
-};
+});
 
 export default Timer;

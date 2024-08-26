@@ -1,27 +1,30 @@
-import { SupportedLangs } from "@/lib/constants";
 import { themeAtom } from "@/store/atoms/theme";
 import { useToggleTheme } from "@/store/hooks/toggleTheme";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { memo, useCallback, useEffect, useRef } from "react";
 import { FaPlay } from "react-icons/fa";
 import { IoMdMoon } from "react-icons/io";
 import { MdLightMode } from "react-icons/md";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import Tooltip from "./ui/Tooltip";
-import Button from "./ui/Button";
-import Timer from "./Timer";
 import { RiSpeedUpFill } from "react-icons/ri";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { sideBarAtom } from "@/store/atoms/sidebar";
+import Tooltip from "./ui/Tooltip";
+import Button from "./ui/Button";
+import Timer from "./Timer";
+import ConvertCode from "./ConvertCode";
+import LangSelector from "./LangSelector";
 type ToolBarProps = {
-  lang: SupportedLangs;
-  setLang: Dispatch<SetStateAction<SupportedLangs>>;
   onSubmit: () => void;
   getTC: () => void;
 };
-const ToolBar = ({ lang, setLang, onSubmit, getTC }: ToolBarProps) => {
+const ToolBar = memo(({ onSubmit, getTC }: ToolBarProps) => {
   const theme = useRecoilValue(themeAtom);
   const toggleTheme = useToggleTheme();
   const setSideBar = useSetRecoilState(sideBarAtom);
+  const toggleSideBar = useCallback(
+    () => setSideBar((prev) => !prev),
+    [setSideBar],
+  );
   const runCodeRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -35,41 +38,18 @@ const ToolBar = ({ lang, setLang, onSubmit, getTC }: ToolBarProps) => {
 
   return (
     <div className="flex w-full items-center justify-center gap-2 p-2 pt-7 text-zinc-50 dark:text-zinc-200">
-      <Button
-        onClick={() => setSideBar((prev) => !prev)}
-        className="p-1 text-lg dark:text-white"
-      >
+      <Button onClick={toggleSideBar} className="p-1 text-lg dark:text-white">
         <RxHamburgerMenu />
         <Tooltip title="Sidebar" position="top" />
       </Button>
       <Timer />
-      <div className="group relative">
-        <select
-          name="Language"
-          id="lang"
-          className="scale-trans rounded-md bg-zinc-600 px-2 py-1 text-sm font-semibold capitalize outline-none transition-colors dark:bg-zinc-900"
-          value={lang}
-          onChange={(e) => {
-            setLang(e.target.value as SupportedLangs);
-          }}
-        >
-          <option className="bg-zinc-900" value="python">
-            python
-          </option>
-          <option className="bg-zinc-900" value="javascript">
-            javascript
-          </option>
-          <option className="bg-zinc-900" value="cpp">
-            c++
-          </option>
-        </select>
-        <Tooltip position="top" title="Language" />
-      </div>
+      <LangSelector />
       <Button ref={runCodeRef} onClick={onSubmit}>
         <FaPlay className="text-xs" />
         <div>Run Code</div>
         <Tooltip title="Ctrl + '" position="top" />
       </Button>
+      <ConvertCode />
       <Button onClick={getTC}>
         <RiSpeedUpFill className="text-lg" />
         <Tooltip title="Time Comlexity" position="top" />
@@ -84,6 +64,6 @@ const ToolBar = ({ lang, setLang, onSubmit, getTC }: ToolBarProps) => {
       </Button>
     </div>
   );
-};
+});
 
 export default ToolBar;

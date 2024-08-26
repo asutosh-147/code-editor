@@ -1,11 +1,11 @@
 import { Editor } from "@monaco-editor/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { backend_url, SupportedLangs } from "../lib/constants";
+import { backend_url } from "../lib/constants";
 import Input from "./Input";
 import Output from "./Output";
 import ToolBar from "./ToolBar";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { themeAtom } from "@/store/atoms/theme";
 import { useUser } from "@/store/hooks/useUser";
 import { useNavigate } from "react-router-dom";
@@ -17,16 +17,17 @@ import {
 import SideBar from "./SideBar";
 import { sideBarAtom } from "@/store/atoms/sidebar";
 import { AnimatePresence } from "framer-motion";
+import { editorValueAtom, langAtom } from "@/store/atoms/editor";
 const CodeIDE = () => {
   const user = useUser();
   const navigate = useNavigate();
-  const [editorValue, setEditorValue] = useState<string | null>(null);
   const theme = useRecoilValue(themeAtom);
+  const lang = useRecoilValue(langAtom);
+  const isSideBarOpen = useRecoilValue(sideBarAtom);
+  const [editorValue, setEditorValue] = useRecoilState(editorValueAtom);
   const [input, setInput] = useState<string>("");
   const [output, setOutput] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [lang, setLang] = useState<SupportedLangs>("python");
-  const isSideBarOpen = useRecoilValue(sideBarAtom);
   const handleSubmit = async () => {
     try {
       if (!editorValue || !editorValue.length) return;
@@ -79,12 +80,7 @@ const CodeIDE = () => {
   return (
     <div className="flex h-screen flex-col items-center">
       <AnimatePresence>{isSideBarOpen && <SideBar />}</AnimatePresence>
-      <ToolBar
-        lang={lang}
-        setLang={setLang}
-        onSubmit={handleSubmit}
-        getTC={fetchTimeComplexity}
-      />
+      <ToolBar onSubmit={handleSubmit} getTC={fetchTimeComplexity} />
       <ResizablePanelGroup
         direction="horizontal"
         className="grid h-full w-full flex-1 grid-cols-6 gap-[0.01rem] p-1"
@@ -98,6 +94,7 @@ const CodeIDE = () => {
             height="100%"
             theme={theme == "dark" ? "vs-dark" : "light"}
             language={lang}
+            value={editorValue}
             onChange={handleEditorChange}
           />
         </ResizablePanel>

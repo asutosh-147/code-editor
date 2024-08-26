@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
+import { memo } from "react";
 
-const Tooltip = ({
+const Tooltip = memo(({
   title,
   position = "top",
 }: {
@@ -23,6 +24,6 @@ const Tooltip = ({
       {title}
     </label>
   );
-};
+})
 
 export default Tooltip;
