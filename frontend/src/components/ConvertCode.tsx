@@ -1,14 +1,17 @@
 import { backend_url, supportedlangs, SupportedLangsType } from "@/lib/constants";
 import { editorValueAtom, langAtom } from "@/store/atoms/editor";
 import axios from "axios";
-import { ChangeEvent, memo } from "react";
+import { ChangeEvent, memo, useState } from "react";
 import { useRecoilState } from "recoil";
 
 const ConvertCode = memo(() => {
   const [selectedLang,setSelectedLang] = useRecoilState(langAtom);
   const [editorValue,setEditorValue] = useRecoilState(editorValueAtom);
+  const [loading, setLoading] = useState(false);
   const handleConvertCode = async (e:ChangeEvent<HTMLSelectElement>) => {
     try {
+      if(!editorValue || editorValue.length===0) return;
+      setLoading(true);
       const selectedValue = e.target.value;
       const response = await axios.post(`${backend_url}/api/code/convert`,{
         code:editorValue,
@@ -21,6 +24,8 @@ const ConvertCode = memo(() => {
       }
     } catch (error:any) {
       console.log(error.message);
+    } finally{
+      setLoading(false);
     }
   };
   return (
@@ -36,7 +41,9 @@ const ConvertCode = memo(() => {
         className="bg-zinc-900 text-zinc-100 disabled:font-bold disabled:active:text-zinc-100"
         value="convert to"
       >
-        convert to
+        {
+          loading ? "converting..." : "convert to"
+        }
       </option>
       {supportedlangs
         .filter((lang) => lang != selectedLang)
