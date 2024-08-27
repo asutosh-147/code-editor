@@ -11,7 +11,7 @@ const Input = memo(({ input, setInput }: InputProps) => {
       <TextArea
         id="input"
         name="input"
-        className="rounded-b-none"
+        className="rounded-b-none rounded-tl-none"
         placeholder="Your Inputs Here..."
         text={input}
         onChange={(e) => {

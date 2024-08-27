@@ -54,10 +54,10 @@ const SignUp = () => {
     <div className="flex w-full items-center justify-center pt-10">
       {!emailSent ? (
         <div className="flex rounded-xl bg-zinc-300 shadow-2xl">
-          <img src="/authImage.jpg" alt="authimage" className="w-[35rem] flex-1 rounded-l-md" />
+          <img src="/authImage.jpg" alt="authimage" className="w-[40rem] flex-1 rounded-l-md" />
           <form
             onSubmit={handleSubmit(handleSignUp)}
-            className="flex w-72 flex-col items-center gap-8 px-9 pt-5"
+            className="flex w-72 flex-col items-center justify-around gap-8 px-9 pt-5"
           >
             <div className="text-3xl font-bold">Signup</div>
             <div className="flex flex-col items-start gap-3">

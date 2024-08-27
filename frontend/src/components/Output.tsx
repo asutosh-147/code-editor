@@ -19,7 +19,7 @@ const Output = ({ output, loading }: OutputProps) => {
           name="input"
           id="input"
           disabled
-          className="placeholder:text-zinc-200 font-semibold rounded-t-none"
+          className="placeholder:text-zinc-200 font-semibold rounded-t-none rounded-bl-none"
         />
       )}
     </div>

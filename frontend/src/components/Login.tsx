@@ -53,7 +53,7 @@ const Login = () => {
   return (
     <div className="flex w-full items-center justify-center pt-10">
       <div className="flex rounded-xl shadow-2xl bg-zinc-300">
-        <img src="/authImage.jpg" alt="authimage" className="w-[35rem] flex-1 rounded-l-md" />
+        <img src="/authImage.jpg" alt="authimage" className="w-[40rem] flex-1 rounded-l-md" />
         <form
           onSubmit={handleSubmit(handleFormSubmit)}
           className="flex w-max flex-col items-center justify-around gap-10 px-9 pt-6"

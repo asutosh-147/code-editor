@@ -51,7 +51,10 @@ const CodeIDE = () => {
     }
   };
   const handleEditorChange = (value: string | undefined) => {
-    if (value) setEditorValue(value);
+    if (value){
+      setEditorValue(value);
+      localStorage.setItem("code",value);
+    } 
   };
 
   const fetchTimeComplexity = async () => {
@@ -90,7 +93,7 @@ const CodeIDE = () => {
           className="col-span-4 flex flex-col items-start text-white"
         >
           <Editor
-            className="rounded-lg border-4 border-white shadow-xl dark:border-[#1e1e1e]"
+            className="rounded-l-lg border-4 border-white shadow-xl dark:border-[#1e1e1e]"
             height="100%"
             theme={theme == "dark" ? "vs-dark" : "light"}
             language={lang}

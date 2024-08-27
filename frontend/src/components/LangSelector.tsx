@@ -14,6 +14,7 @@ const LangSelector = () => {
         value={lang}
         onChange={(e) => {
           setLang(e.target.value as SupportedLangsType);
+          localStorage.setItem("lang",e.target.value);
         }}
       >
         {supportedlangs.map((lang) => {

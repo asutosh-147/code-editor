@@ -9,7 +9,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ children, label, className, ...props }, ref) => {
     return (
       <div className="flex flex-col items-start gap-2">
-        <p className="text-xs font-medium">{label ? label : ""}</p>
+        <p className="text-xs font-semibold">{label ? label : ""}</p>
         <div className="relative w-full">
           {children}
           <input
