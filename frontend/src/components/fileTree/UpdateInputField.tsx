@@ -1,6 +1,5 @@
 import { forwardRef } from "react";
-import Input from "./ui/Input";
-
+import Input from "../ui/Input";
 type UpdateInputFieldType = {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   nodeIcon: "📄" | "📁";

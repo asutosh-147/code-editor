@@ -1,10 +1,9 @@
 import React, { useRef } from "react";
 import { useState } from "react";
-import { VscNewFile, VscNewFolder } from "react-icons/vsc";
 import { fileTreeType } from "@/lib/filesData";
-import { RiDeleteBin7Line } from "react-icons/ri";
-import { MdOutlineModeEditOutline } from "react-icons/md";
 import UpdateInputField from "./UpdateInputField";
+import FileActionButtons from "./FileActionButtons";
+import CreateActionButtons from "./CreateActionButtons";
 
 type FileTreeProps = {
   data: fileTreeType;
@@ -73,6 +72,7 @@ const FileTree = ({
     e.stopPropagation();
     setUpdateOpen((prev) => !prev);
   };
+
   return (
     <div className="w-max cursor-pointer px-1 text-white">
       {data.type === "FILE" ? (
@@ -157,57 +157,3 @@ const FileTree = ({
 };
 
 export default FileTree;
-
-const FileActionButtons = ({
-  deleteOnClick,
-  updateOnClick,
-}: {
-  deleteOnClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  updateOnClick: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-}) => {
-  return (
-    <>
-      <button
-        name="delete"
-        onClick={deleteOnClick}
-        className="opacity-0 transition-all duration-300 group-hover:opacity-100"
-      >
-        <RiDeleteBin7Line className="text-sm text-white" />
-      </button>
-      <button
-        name="update"
-        onClick={updateOnClick}
-        className="opacity-0 transition-all duration-300 group-hover:opacity-100"
-      >
-        <MdOutlineModeEditOutline className="text-sm text-white" />
-      </button>
-    </>
-  );
-};
-
-const CreateActionButtons = ({
-  toggleInputFolder,
-}: {
-  toggleInputFolder: (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-  ) => void;
-}) => {
-  return (
-    <>
-      <button
-        name="folder"
-        onClick={toggleInputFolder}
-        className="opacity-0 transition-all duration-300 group-hover:opacity-100"
-      >
-        <VscNewFolder className="text-sm text-white" />
-      </button>
-      <button
-        name="file"
-        onClick={toggleInputFolder}
-        className="opacity-0 transition-all duration-300 group-hover:opacity-100"
-      >
-        <VscNewFile className="text-sm text-white" />
-      </button>
-    </>
-  );
-};

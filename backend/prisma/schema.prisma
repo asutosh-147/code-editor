@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["omitApi"]
 }
 
@@ -27,3 +27,17 @@ model Submission {
   time     DateTime @default(now())
   user     User     @relation(fields: [userId], references: [id])
 }
+
+// model FileNode {
+//   id         Int        @id @unique
+//   userId     String
+//   type       FileType
+//   parent     FileNode   @relation(fields: [fileNodeId], references: [id])
+//   children   FileNode[]
+//   fileNodeId Int
+// }
+
+// enum FileType {
+//   FILE
+//   FOLDER
+// }

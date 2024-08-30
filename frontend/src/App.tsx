@@ -8,7 +8,7 @@ import Login from "./components/Login";
 import Landing from "./components/Landing";
 import Layout from "./components/Layout";
 import { Toaster } from "sonner";
-import FileTree from "./components/FileTree";
+import FileTree from "./components/fileTree/FileTree";
 import { useFileTree } from "./store/hooks/useFileTree";
 
 const App = () => {

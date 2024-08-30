@@ -65,13 +65,14 @@ const updateDFS = (node: fileTreeType, currNode: fileTreeType) => {
 };
 export const useFileTree = () => {
   const [fileTreeData, setFileTreeData] = useState(fileTree);
+  
   const insertNodeState = (newNode: fileTreeType) => {
     setFileTreeData((prevData) => insertDfs(newNode, { ...prevData }));
   };
+
   const deleteNodeState = (delNode: fileTreeType) => {
     setFileTreeData((prevData) => deleteDfs(delNode, { ...prevData }));
   };
-
 
   const updateNodeState = (updateNode: fileTreeType) => {
     setFileTreeData((prevData) => updateDFS(updateNode, {...prevData}));
