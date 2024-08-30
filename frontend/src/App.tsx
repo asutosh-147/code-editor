@@ -22,7 +22,8 @@ const App = () => {
   );
 };
 const AuthApp = () => {
-  const { fileTreeData,insertNodeState, deleteNodeState } = useFileTree();
+  const { fileTreeData, insertNodeState, deleteNodeState, updateNodeState } =
+    useFileTree();
   useEffect(() => {
     const theme = localStorage.getItem("theme");
     if (theme == "dark") document.documentElement.classList.add("dark");
@@ -42,7 +43,21 @@ const AuthApp = () => {
         <Route path="/editor" element={<CodeIDE />} />
         <Route path="/signup" element={<Layout children={<SignUp />} />} />
         <Route path="/login" element={<Layout children={<Login />} />} />
-        <Route path="/fileTree" element={<Layout children={<FileTree data={fileTreeData} insertNode={insertNodeState} deleteNode={deleteNodeState} />} />} />
+        <Route
+          path="/fileTree"
+          element={
+            <Layout
+              children={
+                <FileTree
+                  data={fileTreeData}
+                  insertNode={insertNodeState}
+                  deleteNode={deleteNodeState}
+                  updateNode={updateNodeState}
+                />
+              }
+            />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );

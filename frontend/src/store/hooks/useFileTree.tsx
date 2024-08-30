@@ -19,7 +19,10 @@ const insertDfs = (newNode: fileTreeType, currNode: fileTreeType) => {
     insertDfs(newNode, child),
   );
 
-  return nodeCopy;
+  if (nodeCopy.children !== currNode.children) {
+    return nodeCopy;
+  }
+  return currNode;
 };
 
 const deleteDfs = (delNode: fileTreeType, currNode: fileTreeType) => {
@@ -32,14 +35,34 @@ const deleteDfs = (delNode: fileTreeType, currNode: fileTreeType) => {
       (child) => child.id != delNode.id,
     );
     return nodeCopy;
+  } else {
+    nodeCopy.children = nodeCopy.children.map((child) =>
+      deleteDfs(delNode, child),
+    );
   }
-  nodeCopy.children = nodeCopy.children.map((child) =>
-    deleteDfs(delNode, child),
-  );
 
   return nodeCopy;
 };
 
+const updateDFS = (node: fileTreeType, currNode: fileTreeType) => {
+  const nodeCopy = {
+    ...currNode,
+    children: currNode.children ? [...currNode.children] : [],
+  };
+
+  if (node.parent === nodeCopy.id) {
+    const index = nodeCopy.children.findIndex((child) => child.id === node.id);
+    nodeCopy.children[index] = node;
+    
+    return nodeCopy;
+  } else {
+    nodeCopy.children = nodeCopy.children.map((child) =>
+      updateDFS(node, child),
+    );
+  }
+
+  return nodeCopy;
+};
 export const useFileTree = () => {
   const [fileTreeData, setFileTreeData] = useState(fileTree);
   const insertNodeState = (newNode: fileTreeType) => {
@@ -48,5 +71,11 @@ export const useFileTree = () => {
   const deleteNodeState = (delNode: fileTreeType) => {
     setFileTreeData((prevData) => deleteDfs(delNode, { ...prevData }));
   };
-  return { fileTreeData, insertNodeState, deleteNodeState };
+
+
+  const updateNodeState = (updateNode: fileTreeType) => {
+    setFileTreeData((prevData) => updateDFS(updateNode, {...prevData}));
+  }
+
+  return { fileTreeData, insertNodeState, deleteNodeState, updateNodeState };
 };
