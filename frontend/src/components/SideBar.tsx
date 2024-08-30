@@ -1,7 +1,7 @@
+import axios from "axios";
 import { backend_url } from "@/lib/constants";
 import { sideBarAtom } from "@/store/atoms/sidebar";
 import { userAtom } from "@/store/atoms/user";
-import axios from "axios";
 import { motion, Variants } from "framer-motion";
 import { FiLogOut } from "react-icons/fi";
 import { IoClose } from "react-icons/io5";
@@ -39,7 +39,7 @@ const SideBar = () => {
       animate="visible"
       exit="exit"
       transition={{delay:0.1,type:"spring",mass:0.32}}
-      className="fixed left-0 z-50 h-screen w-52 space-y-3 rounded-r-md  py-2 shadow-2xl backdrop-blur-xl border-r border-zinc-300 dark:border-zinc-600"
+      className="fixed left-0 z-50 h-screen w-64 space-y-3 rounded-r-md  py-2 shadow-2xl backdrop-blur-xl border-r border-zinc-300 dark:border-zinc-600"
     >
       <div className="border-b border-zinc-400 pb-2 text-center text-2xl font-bold text-zinc-950 dark:text-zinc-200 relative">
         <Link to={"/"}>

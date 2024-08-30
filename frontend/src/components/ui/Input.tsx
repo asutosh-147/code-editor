@@ -8,7 +8,7 @@ type InputProps = React.InputHTMLAttributes<HTMLInputElement> & {
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ children, label, className, ...props }, ref) => {
     return (
-      <div className="flex flex-col items-start gap-2">
+      <div className="flex flex-col items-start gap-1">
         <p className="text-xs font-semibold">{label ? label : ""}</p>
         <div className="relative w-full">
           {children}

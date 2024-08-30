@@ -8,6 +8,8 @@ import Login from "./components/Login";
 import Landing from "./components/Landing";
 import Layout from "./components/Layout";
 import { Toaster } from "sonner";
+import FileTree from "./components/FileTree";
+import { useFileTree } from "./store/hooks/useFileTree";
 
 const App = () => {
   return (
@@ -20,6 +22,7 @@ const App = () => {
   );
 };
 const AuthApp = () => {
+  const { fileTreeData,insertNodeState, deleteNodeState } = useFileTree();
   useEffect(() => {
     const theme = localStorage.getItem("theme");
     if (theme == "dark") document.documentElement.classList.add("dark");
@@ -39,6 +42,7 @@ const AuthApp = () => {
         <Route path="/editor" element={<CodeIDE />} />
         <Route path="/signup" element={<Layout children={<SignUp />} />} />
         <Route path="/login" element={<Layout children={<Login />} />} />
+        <Route path="/fileTree" element={<Layout children={<FileTree data={fileTreeData} insertNode={insertNodeState} deleteNode={deleteNodeState} />} />} />
       </Routes>
     </BrowserRouter>
   );
