@@ -5,7 +5,8 @@ import { v1 } from "./routes/v1";
 import { runner } from "./routes/runner";
 import cookieParser from "cookie-parser";
 import { authRouter } from "./routes/auth";
-import { fileRouter } from "./routes/file";
+import { subRouter } from "./routes/submission";
+import { fileRouter } from "./routes/filetree";
 dotenv.config();
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(express.json());
 app.use(v1);
 app.use("/api/code", runner);
 app.use("/api/auth", authRouter);
+app.use("/api/submission", subRouter);
 app.use("/api/file", fileRouter);
 
 const PORT = process.env.PORT;

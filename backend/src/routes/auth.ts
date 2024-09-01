@@ -30,6 +30,7 @@ authRouter.post("/signup", async (req: Request, res: Response) => {
       create: parsedBody.data,
       update: parsedBody.data,
     });
+    console.log(user);
     const token = jwt.sign({ userId: user.id }, jwtSecret, {
       expiresIn: "10m",
     });
@@ -52,7 +53,10 @@ authRouter.post("/login", async (req: Request, res: Response) => {
       },
     });
 
-    if (!user || !user.verified) return res.status(403).json({ error: "User Doesn't Exist or Not verified" });
+    if (!user || !user.verified)
+      return res
+        .status(403)
+        .json({ error: "User Doesn't Exist or Not verified" });
     const isPasswordCorrect = await compareHash(
       parsedBody.data.password,
       user.password
@@ -102,6 +106,17 @@ authRouter.get("/verify/:token", async (req: Request, res: Response) => {
       },
       data: {
         verified: true,
+      },
+    });
+    await prisma.fileNode.create({
+      data: {
+        name: "root",
+        type: "FOLDER",
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
       },
     });
     const newToken = jwt.sign({ userId }, jwtSecret);

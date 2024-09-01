@@ -4,6 +4,10 @@ import { fileTreeType } from "@/lib/filesData";
 import UpdateInputField from "./UpdateInputField";
 import FileActionButtons from "./FileActionButtons";
 import CreateActionButtons from "./CreateActionButtons";
+import axios from "axios";
+import { backend_url } from "@/lib/constants";
+import { toast } from "sonner";
+import { FaChevronRight } from "react-icons/fa";
 
 type FileTreeProps = {
   data: fileTreeType;
@@ -38,31 +42,67 @@ const FileTree = ({
     });
   };
 
-  const handleNewFolder = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleNewNode = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (inputRef.current) {
-      insertNode({
-        id: Math.random() * 100 + 20,
-        children: null,
-        name: inputRef.current.value,
-        type: inputOpen.isFile ? "FILE" : "FOLDER",
-        parent: data.id,
-      });
+      const type = inputOpen.isFile ? "FILE" : "FOLDER";
+      try {
+        const response = await axios.post(`${backend_url}/api/file/create`,{
+          name: inputRef.current.value,
+          type,
+          parentId: data.id,
+        },{
+          withCredentials:true
+        })
+        if(response.status === 200){
+          insertNode(response.data);
+        }
+      } catch (error:any) {
+        toast(`Error in creating ${type}`);
+        console.log(error.message);
+      }
     }
     setInputOpen((prev) => ({ ...prev, open: false }));
   };
 
-  const handleDeleteNode = (
+  const handleDeleteNode = async (
     e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     e.stopPropagation();
-    deleteNode(data);
+    try {
+        const response = await axios.delete(`${backend_url}/api/file/delete`,{
+          data:{
+            nodeId:data.id
+          },
+          withCredentials:true
+        })
+        if(response.status === 200){
+          deleteNode(response.data);
+        }
+    } catch (error:any) {
+      toast(`Error in Deleting ${data.name}`);
+      console.log(error.message);
+    }
   };
 
-  const handleUpdateNode = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleUpdateNode = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (updateRef.current)
-      updateNode({ ...data, name: updateRef.current.value });
+    if (updateRef.current){
+      try {
+        const response = await axios.put(`${backend_url}/api/file/update`,{
+          id:data.id,
+          name:updateRef.current.value
+        },{
+          withCredentials:true
+        })
+        if(response.status === 200){
+          updateNode({...response.data,children:data.children});
+        }
+      } catch (error:any) {
+        toast(`Error in Deleting ${data.name}`);
+        console.log(error.message);
+      }
+    }
     setUpdateOpen(false);
   };
 
@@ -113,12 +153,12 @@ const FileTree = ({
                   nodeIcon="📁"
                 />
               ) : (
-                <>📁 {data.name}</>
+                <><div><FaChevronRight className={`text-xs ${open?"rotate-90":""}`} /></div>📁 {data.name}</>
               )}
             </div>
             <div className="flex items-center gap-2">
               <CreateActionButtons toggleInputFolder={toggleInputFolder} />
-              {data.parent && (
+              {data.parentId && (
                 <FileActionButtons
                   deleteOnClick={handleDeleteNode}
                   updateOnClick={handleToggleUpdate}
@@ -129,7 +169,7 @@ const FileTree = ({
           {inputOpen.open && (
             <div className="pl-6">
               <UpdateInputField
-                onSubmit={handleNewFolder}
+                onSubmit={handleNewNode}
                 onBlur={() =>
                   setInputOpen((prev) => ({ ...prev, open: false }))
                 }
@@ -140,9 +180,8 @@ const FileTree = ({
           )}
         </>
       )}
-      <div className="pl-4">
-        {open &&
-          data.children?.map((childData) => (
+      <div className={`pl-4 ${open ? "block":"hidden"}`}>
+        {data.children?.map((childData) => (
             <FileTree
               key={childData.id}
               data={childData}

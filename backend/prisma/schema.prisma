@@ -15,6 +15,7 @@ model User {
   email      String       @unique
   password   String
   submission Submission[]
+  FileNode   FileNode[]
 }
 
 model Submission {
@@ -28,16 +29,18 @@ model Submission {
   user     User     @relation(fields: [userId], references: [id])
 }
 
-// model FileNode {
-//   id         Int        @id @unique
-//   userId     String
-//   type       FileType
-//   parent     FileNode   @relation(fields: [fileNodeId], references: [id])
-//   children   FileNode[]
-//   fileNodeId Int
-// }
+model FileNode {
+  id       Int        @id @default(autoincrement())
+  name     String
+  type     FileType
+  userId   String
+  parentId Int?
+  parent   FileNode?  @relation("ParentChild", fields: [parentId], references: [id] ,onDelete: Cascade)
+  children FileNode[] @relation("ParentChild")
+  user     User       @relation(fields: [userId], references: [id])
+}
 
-// enum FileType {
-//   FILE
-//   FOLDER
-// }
+enum FileType {
+  FOLDER
+  FILE
+}

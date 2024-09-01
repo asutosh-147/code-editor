@@ -1,12 +1,13 @@
-import { fileTree, fileTreeType } from "@/lib/filesData";
-import { useState } from "react";
+import { fileTreeType } from "@/lib/filesData";
+import { useRecoilState } from "recoil";
+import { fileTreeAtom } from "../atoms/filetree";
 
 const insertDfs = (newNode: fileTreeType, currNode: fileTreeType) => {
   const nodeCopy = {
     ...currNode,
     children: currNode.children ? [...currNode.children] : [],
   };
-  if (newNode.parent === currNode.id) {
+  if (newNode.parentId === currNode.id) {
     if (nodeCopy.children) {
       nodeCopy.children.unshift(newNode);
     } else {
@@ -30,7 +31,7 @@ const deleteDfs = (delNode: fileTreeType, currNode: fileTreeType) => {
     ...currNode,
     children: currNode.children ? [...currNode.children] : [],
   };
-  if (delNode.parent === nodeCopy.id) {
+  if (delNode.parentId === nodeCopy.id) {
     nodeCopy.children = nodeCopy.children.filter(
       (child) => child.id != delNode.id,
     );
@@ -50,10 +51,9 @@ const updateDFS = (node: fileTreeType, currNode: fileTreeType) => {
     children: currNode.children ? [...currNode.children] : [],
   };
 
-  if (node.parent === nodeCopy.id) {
+  if (node.parentId === nodeCopy.id) {
     const index = nodeCopy.children.findIndex((child) => child.id === node.id);
     nodeCopy.children[index] = node;
-    
     return nodeCopy;
   } else {
     nodeCopy.children = nodeCopy.children.map((child) =>
@@ -64,8 +64,7 @@ const updateDFS = (node: fileTreeType, currNode: fileTreeType) => {
   return nodeCopy;
 };
 export const useFileTree = () => {
-  const [fileTreeData, setFileTreeData] = useState(fileTree);
-  
+  const [fileTreeData, setFileTreeData] = useRecoilState(fileTreeAtom);
   const insertNodeState = (newNode: fileTreeType) => {
     setFileTreeData((prevData) => insertDfs(newNode, { ...prevData }));
   };

@@ -2,49 +2,49 @@ export type fileTreeType = {
   id: number;
   name: string;
   type: "FILE" | "FOLDER";
-  parent: null | number;
-  children: null | fileTreeType[];
+  parentId: null | number;
+  children: fileTreeType[];
 };
 
 export const fileTree: fileTreeType = {
   id: 1,
   name: "root",
   type: "FOLDER",
-  parent: null,
+  parentId: null,
   children: [
     {
       id: 2,
       name: "index.js",
       type: "FILE",
-      parent: 1,
-      children: null,
+      parentId: 1,
+      children: [],
     },
     {
       id: 9,
       name: "src",
       type: "FOLDER",
-      parent: 1,
+      parentId: 1,
       children: [
         {
           id: 5,
           name: "index.js",
           type: "FILE",
-          parent: 9,
-          children: null,
+          parentId: 9,
+          children: [],
         },
         {
           id: 6,
           name: "src",
           type: "FOLDER",
-          parent: 9,
-          children: null,
+          parentId: 9,
+          children: [],
         },
         {
           id: 7,
           name: "index.ts",
           type: "FILE",
-          parent: 9,
-          children: null,
+          parentId: 9,
+          children: [],
         },
       ],
     },
@@ -52,35 +52,35 @@ export const fileTree: fileTreeType = {
       id: 4,
       name: "index.ts",
       type: "FILE",
-      parent: 1,
-      children: null,
+      parentId: 1,
+      children: [],
     },
     {
       id: 3,
       name: "src",
       type: "FOLDER",
-      parent: 1,
+      parentId: 1,
       children: [
         {
           id: 10,
           name: "index.js",
           type: "FILE",
-          parent: 3,
-          children: null,
+          parentId: 3,
+          children: [],
         },
         {
           id: 11,
           name: "src",
           type: "FOLDER",
-          parent: 3,
-          children: null,
+          parentId: 3,
+          children: [],
         },
         {
           id: 12,
           name: "index.ts",
           type: "FILE",
-          parent: 3,
-          children: null,
+          parentId: 3,
+          children: [],
         },
       ],
     },

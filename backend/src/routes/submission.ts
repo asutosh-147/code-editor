@@ -1,10 +1,10 @@
 import { Request, Response, Router } from "express";
 import { prisma } from "../db";
 import { authMiddleware } from "../middlewares/auth";
-export const fileRouter = Router();
+export const subRouter = Router();
 
-fileRouter.use(authMiddleware);
-fileRouter.post("/save", async (req: Request, res: Response) => {
+subRouter.use(authMiddleware);
+subRouter.post("/save", async (req: Request, res: Response) => {
   try {
     const { fileName, input, code, lang } = req.body as Record<
       keyof typeof req.body,
@@ -25,7 +25,7 @@ fileRouter.post("/save", async (req: Request, res: Response) => {
   }
 });
 
-fileRouter.get("/allfiles", async (req: Request, res: Response) => {
+subRouter.get("/allsubs", async (req: Request, res: Response) => {
   try {
     const subs = await prisma.submission.findMany({
       where: {
@@ -44,7 +44,7 @@ fileRouter.get("/allfiles", async (req: Request, res: Response) => {
   }
 });
 
-fileRouter.put("/update", async (req: Request, res: Response) => {
+subRouter.put("/update", async (req: Request, res: Response) => {
   try {
     const { fileId, updatedCode } = req.body as Record<
       keyof typeof req.body,
@@ -65,7 +65,7 @@ fileRouter.put("/update", async (req: Request, res: Response) => {
   }
 });
 
-fileRouter.delete("/delete", async (req: Request, res: Response) => {
+subRouter.delete("/delete", async (req: Request, res: Response) => {
   try {
     const { fileId } = req.body;
     const deletedFile = await prisma.submission.delete({
