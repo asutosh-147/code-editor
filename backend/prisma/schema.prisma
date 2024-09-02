@@ -35,7 +35,7 @@ model Code {
   fileId   Int      @unique
   code     String
   input    String
-  fileNode FileNode @relation(fields: [fileId], references: [id])
+  fileNode FileNode @relation(fields: [fileId], references: [id], onDelete: Cascade)
 }
 
 enum FileType {

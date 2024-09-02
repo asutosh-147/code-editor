@@ -13,8 +13,6 @@ export const useLang = () => {
             setLang(langMap.get(extension)!);
         } 
         return;
-
     }
-
     return setCodeLang;
 }

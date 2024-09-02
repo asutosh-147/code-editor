@@ -22,7 +22,7 @@ const Explorer = () => {
         animate="visible"
         exit="exit"
         transition={{ delay: 0.1, type: "spring", mass: 0.32 }}
-        className="fixed left-0 z-50 h-screen w-64 space-y-3 rounded-r-md border-r border-zinc-300 py-2 shadow-2xl backdrop-blur-xl dark:border-zinc-600"
+        className="fixed left-0 z-50 h-screen w-64 space-y-3 rounded-r-md border-r border-zinc-300 py-2 shadow-2xl backdrop-blur-xl  dark:border-zinc-600"
       >
         <FileTree
           data={fileTreeData}

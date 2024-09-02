@@ -11,7 +11,7 @@ import { FaChevronRight } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { inputTreeSchema, treeInputType } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { currentFileIdAtom } from "@/store/atoms/editor";
 import { useLang } from "@/store/hooks/useLang";
 
@@ -28,7 +28,7 @@ const FileTree = ({
   deleteNode,
   updateNode,
 }: FileTreeProps) => {
-  const setCurrentFileId = useSetRecoilState(currentFileIdAtom);
+  const [fileId, setCurrentFileId] = useRecoilState(currentFileIdAtom);
   const setLang = useLang();
   const [open, setOpen] = useState(() => {
     return data.parentId === null ? true : false;
@@ -56,7 +56,6 @@ const FileTree = ({
       isFile: e.currentTarget.name === "folder" ? false : true,
     });
   };
-
   const handleNewNode = async (fieldData: treeInputType) => {
     const type = fieldData.isFile ? "FILE" : "FOLDER";
     try {
@@ -73,10 +72,13 @@ const FileTree = ({
       );
       if (response.status === 200) {
         insertNode(response.data);
-        setCurrentFileId(response.data.id);
+        if (fieldData.isFile) {
+          setCurrentFileId(response.data.id);
+          setLang(fieldData.name, true);
+        }
       }
     } catch (error: any) {
-      toast(`Error in creating ${type}`);
+      toast.error(error.response.data.error);
       console.log(error.message);
     }
     setInputOpen((prev) => ({ ...prev, open: false }));
@@ -108,6 +110,7 @@ const FileTree = ({
         `${backend_url}/api/file/update`,
         {
           id: data.id,
+          parentId: data.parentId,
           name: fieldData.name,
         },
         {
@@ -116,9 +119,12 @@ const FileTree = ({
       );
       if (response.status === 200) {
         updateNode({ ...response.data, children: data.children });
+        if (fieldData.isFile) {
+          setLang(fieldData.name, true);
+        }
       }
     } catch (error: any) {
-      toast(`Error in Deleting ${data.name}`);
+      toast(error.response.data.error);
       console.log(error.message);
     }
     setUpdateOpen(false);
@@ -137,9 +143,9 @@ const FileTree = ({
     }
   }, [errors]);
   return (
-    <div className="w-max cursor-pointer px-1 text-white">
+    <div className="w-max cursor-pointer px-1 dark:text-white">
       {data.type === "FILE" ? (
-        <div className="group flex items-center justify-between gap-5 rounded-sm px-1 transition-all duration-300 hover:bg-zinc-600">
+        <div className="group flex items-center justify-between gap-5 rounded-sm px-1 transition-all duration-300 hover:bg-zinc-400 dark:hover:bg-zinc-600">
           <div className="flex items-center">
             {updateOpen ? (
               <UpdateInputField
@@ -154,8 +160,9 @@ const FileTree = ({
               <div
                 onClick={() => {
                   setCurrentFileId(data.id);
-                  setLang(data.name,true);
+                  setLang(data.name, true);
                 }}
+                className={`${fileId === data.id ? "rounded-md bg-zinc-400 dark:bg-zinc-600 pr-2" : ""}`}
               >
                 📄 {data.name}
               </div>
@@ -172,7 +179,7 @@ const FileTree = ({
         <>
           <div
             onClick={toggleOpen}
-            className="group flex items-center justify-between gap-5 rounded-sm px-1 transition-all duration-300 hover:bg-zinc-600"
+            className="group flex items-center justify-between gap-5 rounded-sm px-1 transition-all duration-300 hover:bg-zinc-400 dark:hover:bg-zinc-600"
           >
             <div className="flex items-center">
               {updateOpen ? (

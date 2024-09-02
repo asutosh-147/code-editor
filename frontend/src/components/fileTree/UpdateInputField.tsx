@@ -1,5 +1,4 @@
 // import { forwardRef } from "react";
-import { useLang } from "@/store/hooks/useLang";
 import Input from "../ui/Input";
 import { UseFormRegisterReturn } from "react-hook-form";
 type UpdateInputFieldType = {
@@ -19,16 +18,9 @@ const UpdateInputField = ({
   inputRegister,
   fileRegister,
 }: UpdateInputFieldType) => {
-  const setCodeLang = useLang();
-  if(isFile){
-    setCodeLang(name,isFile)
-
-  }
   return (
     <form
-      onSubmit={(e) => {
-        onSubmit(e);
-      }}
+      onSubmit={onSubmit}
       className="flex items-center"
     >
       {isFile ? "📄" : "📁"}

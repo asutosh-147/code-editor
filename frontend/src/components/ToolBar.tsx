@@ -38,7 +38,7 @@ const ToolBar = memo(({ onSubmit, getTC }: ToolBarProps) => {
     <div className="flex w-full items-center justify-center gap-2 p-2 pt-7 text-zinc-50 dark:text-zinc-200">
       <Button onClick={toggleSideBar} className="p-1 text-lg dark:text-white">
         <RxHamburgerMenu />
-        <Tooltip title="Sidebar" position="top" />
+        <Tooltip title="Explorer" position="top" />
       </Button>
       <Timer />
       <LangSelector />

@@ -24,6 +24,7 @@ const CodeIDE = ({ id }: { id: number }) => {
   const lang = useRecoilValue(langAtom);
   const [output, setOutput] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  const [saved, setSaved] = useState(true);
   const handleSubmit = async () => {
     try {
       if (!data?.code || !data?.code.length) return;
@@ -48,6 +49,7 @@ const CodeIDE = ({ id }: { id: number }) => {
   };
   const handleEditorChange = (value: string | undefined) => {
     if (value != undefined) {
+      if(saved) setSaved(false);
       setData((prev) => {
         if (prev) {
           return { ...prev, code: value };
@@ -94,6 +96,7 @@ const CodeIDE = ({ id }: { id: number }) => {
     if(response.status === 200){
       toast.success("File Saved");
     }
+    setSaved(true);
   }, [data]);
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

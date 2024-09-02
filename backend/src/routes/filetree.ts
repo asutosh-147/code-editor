@@ -58,14 +58,14 @@ fileRouter.post("/create", async (req: Request, res: Response) => {
     const parsedBody = fileNodeSchema.safeParse(req.body);
     if (!parsedBody.success)
       return res.status(400).json({ error: "Invalid Inputs" });
-    const parentNode = await prisma.fileNode.findUnique({
+    const file = await prisma.fileNode.findFirst({
       where: {
         userId: req.userId,
-        id: parsedBody.data.parentId,
+        parentId: parsedBody.data.parentId,
+        name: parsedBody.data.name,
       },
     });
-    if (!parentNode)
-      return res.status(400).json({ error: "Parent Doesn't Exist" });
+    if (file) return res.status(400).json({ error: `${file.type} already exist` });
     const createdNode = await prisma.fileNode.create({
       data: { ...parsedBody.data, userId: req.userId },
       omit: {
@@ -93,6 +93,15 @@ fileRouter.put("/update", async (req: Request, res: Response) => {
   try {
     const parsedBody = fileUpdateSchema.safeParse(req.body);
     if (!parsedBody.success) throw new Error("Invalid Inputs");
+    console.log(parsedBody.data);
+    const file = await prisma.fileNode.findFirst({
+      where: {
+        userId: req.userId,
+        parentId:parsedBody.data.parentId,
+        name: parsedBody.data.name,
+      },
+    });
+    if (file) return res.status(400).json({ error: `${file.type} already exist` });
     const updatedNode = await prisma.fileNode.update({
       where: {
         id: parsedBody.data.id,
@@ -115,25 +124,13 @@ fileRouter.put("/update", async (req: Request, res: Response) => {
 fileRouter.delete("/delete", async (req: Request, res: Response) => {
   try {
     const { nodeId } = req.body;
-    // if (!nodeId) throw new Error("Invalid input");
-    await prisma.code.delete({
-      where:{
-        fileId:nodeId
-      }
-    });
+    if (!nodeId) throw new Error("Invalid input");
     const deletedNode = await prisma.fileNode.delete({
       where: {
         id: nodeId,
         userId: req.userId,
       },
     });
-    // if (deletedNode.type === "FILE") {
-    //   await prisma.code.deleteMany({
-    //     where: {
-    //       fileId: deletedNode.id,
-    //     },
-    //   });
-    // }
     return res.json(deletedNode);
   } catch (error: any) {
     console.log(error.message);
@@ -144,7 +141,8 @@ fileRouter.delete("/delete", async (req: Request, res: Response) => {
 fileRouter.post("/code/save", async (req: Request, res: Response) => {
   try {
     const { id, fileId, code, input } = req.body;
-    if (!fileId || !id) return res.status(400).json({ error: "fileId doesn't exist" });
+    if (!fileId || !id)
+      return res.status(400).json({ error: "fileId doesn't exist" });
     const updatedCode = await prisma.code.update({
       where: {
         fileId,
@@ -165,8 +163,8 @@ fileRouter.post("/code/save", async (req: Request, res: Response) => {
 fileRouter.get("/code", async (req: Request, res: Response) => {
   try {
     const fileId = parseInt(req.query.fileId as string);
-    console.log(fileId);
-    if (isNaN(fileId)) return res.status(400).json({ error: "fileId doesn't exist" });
+    if (isNaN(fileId))
+      return res.status(400).json({ error: "fileId doesn't exist" });
     const code = await prisma.code.findUnique({
       where: {
         fileId,

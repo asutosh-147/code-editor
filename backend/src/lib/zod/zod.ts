@@ -24,4 +24,5 @@ export const fileNodeSchema = z.object({
 export const fileUpdateSchema = z.object({
   name:z.string().min(1,{message:"Non Empty Name"}),
   id:z.number(),
+  parentId:z.number(),
 })
