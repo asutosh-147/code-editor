@@ -1,6 +1,6 @@
 import { Editor } from "@monaco-editor/react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { backend_url } from "../lib/constants";
 import Input from "./Input";
 import Output from "./Output";
@@ -14,30 +14,26 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import SideBar from "./SideBar";
-import { sideBarAtom } from "@/store/atoms/sidebar";
-import { AnimatePresence } from "framer-motion";
-import { editorValueAtom, langAtom } from "@/store/atoms/editor";
-const CodeIDE = () => {
+import { codeAtomFamily, langAtom } from "@/store/atoms/editor";
+import { toast } from "sonner";
+const CodeIDE = ({ id }: { id: number }) => {
   const user = useUser();
   const navigate = useNavigate();
+  const [data, setData] = useRecoilState(codeAtomFamily(id));
   const theme = useRecoilValue(themeAtom);
   const lang = useRecoilValue(langAtom);
-  const isSideBarOpen = useRecoilValue(sideBarAtom);
-  const [editorValue, setEditorValue] = useRecoilState(editorValueAtom);
-  const [input, setInput] = useState<string>("");
   const [output, setOutput] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const handleSubmit = async () => {
     try {
-      if (!editorValue || !editorValue.length) return;
+      if (!data?.code || !data?.code.length) return;
       setLoading(true);
       const response = await axios.post(
         `${backend_url}/api/code/run`,
         {
           language: lang,
-          code: editorValue,
-          input,
+          code: data.code,
+          input: data.input,
         },
         {
           withCredentials: true,
@@ -51,20 +47,25 @@ const CodeIDE = () => {
     }
   };
   const handleEditorChange = (value: string | undefined) => {
-    if (value){
-      setEditorValue(value);
-      localStorage.setItem("code",value);
-    } 
+    if (value != undefined) {
+      setData((prev) => {
+        if (prev) {
+          return { ...prev, code: value };
+        }
+        return null;
+      });
+      localStorage.setItem("code", value);
+    }
   };
 
   const fetchTimeComplexity = async () => {
     try {
       setLoading(true);
-      if (!editorValue || !editorValue.length) return;
+      if (!data?.code || !data.code.length) return;
       const response = await axios.post(
         `${backend_url}/api/code/time`,
         {
-          code: editorValue,
+          code: data.code,
         },
         { withCredentials: true },
       );
@@ -80,9 +81,36 @@ const CodeIDE = () => {
       navigate("/login");
     }
   }, [user, navigate]);
+  const save = useCallback(async () => {
+    const response = await axios.post(
+      `${backend_url}/api/file/code/save`,
+      {
+        ...data,
+      },
+      {
+        withCredentials: true,
+      },
+    );
+    if(response.status === 200){
+      toast.success("File Saved");
+    }
+  }, [data]);
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.key == "s") {
+        e.preventDefault();
+        save();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [save]);
+
+  if (data == null) return <div>noValue</div>;
   return (
     <div className="flex h-screen flex-col items-center">
-      <AnimatePresence>{isSideBarOpen && <SideBar />}</AnimatePresence>
       <ToolBar onSubmit={handleSubmit} getTC={fetchTimeComplexity} />
       <ResizablePanelGroup
         direction="horizontal"
@@ -97,7 +125,7 @@ const CodeIDE = () => {
             height="100%"
             theme={theme == "dark" ? "vs-dark" : "light"}
             language={lang}
-            value={editorValue}
+            value={data.code}
             onChange={handleEditorChange}
           />
         </ResizablePanel>
@@ -111,7 +139,7 @@ const CodeIDE = () => {
             className="col-span-2 flex min-h-full flex-col dark:text-zinc-200"
           >
             <ResizablePanel defaultSize={25}>
-              <Input input={input} setInput={setInput} />
+              <Input input={data.input} setInput={setData} />
             </ResizablePanel>
             <ResizableHandle
               withHandle

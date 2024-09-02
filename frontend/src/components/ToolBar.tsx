@@ -1,6 +1,6 @@
 import { themeAtom } from "@/store/atoms/theme";
 import { useToggleTheme } from "@/store/hooks/toggleTheme";
-import { memo, useCallback, useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import { FaPlay } from "react-icons/fa";
 import { IoMdMoon } from "react-icons/io";
 import { MdLightMode } from "react-icons/md";
@@ -21,14 +21,12 @@ const ToolBar = memo(({ onSubmit, getTC }: ToolBarProps) => {
   const theme = useRecoilValue(themeAtom);
   const toggleTheme = useToggleTheme();
   const setSideBar = useSetRecoilState(sideBarAtom);
-  const toggleSideBar = useCallback(
-    () => setSideBar((prev) => !prev),
-    [setSideBar],
-  );
+  const toggleSideBar = () => setSideBar((prev) => !prev);
   const runCodeRef = useRef<HTMLButtonElement | null>(null);
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.key == "'") runCodeRef.current?.click();
+      
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => {

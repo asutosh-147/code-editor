@@ -65,6 +65,7 @@ const updateDFS = (node: fileTreeType, currNode: fileTreeType) => {
 };
 export const useFileTree = () => {
   const [fileTreeData, setFileTreeData] = useRecoilState(fileTreeAtom);
+  // console.log(fileTreeData);
   const insertNodeState = (newNode: fileTreeType) => {
     setFileTreeData((prevData) => insertDfs(newNode, { ...prevData }));
   };

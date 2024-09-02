@@ -1,5 +1,4 @@
 import { RecoilRoot } from "recoil";
-import CodeIDE from "./components/CodeIDE";
 import "./index.css";
 import { Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -8,9 +7,7 @@ import Login from "./components/Login";
 import Landing from "./components/Landing";
 import Layout from "./components/Layout";
 import { Toaster } from "sonner";
-import FileTree from "./components/fileTree/FileTree";
-import { useFileTree } from "./store/hooks/useFileTree";
-
+import Editor from "./components/Editor";
 const App = () => {
   return (
     <RecoilRoot>
@@ -22,13 +19,10 @@ const App = () => {
   );
 };
 const AuthApp = () => {
-  const { fileTreeData, insertNodeState, deleteNodeState, updateNodeState } =
-    useFileTree();
   useEffect(() => {
     const theme = localStorage.getItem("theme");
     if (theme == "dark") document.documentElement.classList.add("dark");
   }, []);
-
   return (
     <BrowserRouter>
       <Routes>
@@ -40,24 +34,9 @@ const AuthApp = () => {
             </Layout>
           }
         />
-        <Route path="/editor" element={<CodeIDE />} />
+        <Route path="/editor" element={<Editor />} />
         <Route path="/signup" element={<Layout children={<SignUp />} />} />
         <Route path="/login" element={<Layout children={<Login />} />} />
-        <Route
-          path="/fileTree"
-          element={
-            <Layout
-              children={
-                <FileTree
-                  data={fileTreeData}
-                  insertNode={insertNodeState}
-                  deleteNode={deleteNodeState}
-                  updateNode={updateNodeState}
-                />
-              }
-            />
-          }
-        />
       </Routes>
     </BrowserRouter>
   );

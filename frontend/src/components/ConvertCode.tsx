@@ -1,26 +1,32 @@
 import { backend_url, supportedlangs, SupportedLangsType } from "@/lib/constants";
-import { editorValueAtom, langAtom } from "@/store/atoms/editor";
+import { codeAtomFamily, currentFileIdAtom, langAtom } from "@/store/atoms/editor";
 import axios from "axios";
 import { ChangeEvent, memo, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 const ConvertCode = memo(() => {
   const [selectedLang,setSelectedLang] = useRecoilState(langAtom);
-  const [editorValue,setEditorValue] = useRecoilState(editorValueAtom);
   const [loading, setLoading] = useState(false);
+  const id = useRecoilValue(currentFileIdAtom);
+  const [data,setData] = useRecoilState(codeAtomFamily(id!));
   const handleConvertCode = async (e:ChangeEvent<HTMLSelectElement>) => {
     try {
-      if(!editorValue || editorValue.length===0) return;
+      if(!data?.code || data.code.length===0) return;
       setLoading(true);
       const selectedValue = e.target.value;
       const response = await axios.post(`${backend_url}/api/code/convert`,{
-        code:editorValue,
+        code:data.code,
         lang:selectedLang,
         convertLang:selectedValue
       },{withCredentials:true})
       if(response.status === 200){
         setSelectedLang(selectedValue as SupportedLangsType)
-        setEditorValue(response.data.code);
+        setData(prevData => {
+          if(prevData){
+            return {...prevData,code:response.data.code};
+          }
+          return null;
+        });
       }
     } catch (error:any) {
       console.log(error.message);

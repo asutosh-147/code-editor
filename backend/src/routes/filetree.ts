@@ -72,6 +72,16 @@ fileRouter.post("/create", async (req: Request, res: Response) => {
         userId: true,
       },
     });
+    if (createdNode.type === "FILE") {
+      await prisma.code.create({
+        data: {
+          fileId: createdNode.id,
+          code: "",
+          input: "",
+        },
+      });
+    }
+
     return res.json(createdNode);
   } catch (error: any) {
     console.log(error.message);
@@ -105,19 +115,66 @@ fileRouter.put("/update", async (req: Request, res: Response) => {
 fileRouter.delete("/delete", async (req: Request, res: Response) => {
   try {
     const { nodeId } = req.body;
-    if (isNaN(nodeId)) throw new Error("Invalid input");
+    // if (!nodeId) throw new Error("Invalid input");
+    await prisma.code.delete({
+      where:{
+        fileId:nodeId
+      }
+    });
     const deletedNode = await prisma.fileNode.delete({
       where: {
         id: nodeId,
         userId: req.userId,
       },
-      omit: {
-        userId: true,
-      },
     });
+    // if (deletedNode.type === "FILE") {
+    //   await prisma.code.deleteMany({
+    //     where: {
+    //       fileId: deletedNode.id,
+    //     },
+    //   });
+    // }
     return res.json(deletedNode);
   } catch (error: any) {
     console.log(error.message);
     return res.status(400).json({ error: "Unable to delete" });
+  }
+});
+
+fileRouter.post("/code/save", async (req: Request, res: Response) => {
+  try {
+    const { id, fileId, code, input } = req.body;
+    if (!fileId || !id) return res.status(400).json({ error: "fileId doesn't exist" });
+    const updatedCode = await prisma.code.update({
+      where: {
+        fileId,
+        id,
+      },
+      data: {
+        code,
+        input,
+      },
+    });
+    return res.json(updatedCode);
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(400).json({ error: "Unable to save" });
+  }
+});
+
+fileRouter.get("/code", async (req: Request, res: Response) => {
+  try {
+    const fileId = parseInt(req.query.fileId as string);
+    console.log(fileId);
+    if (isNaN(fileId)) return res.status(400).json({ error: "fileId doesn't exist" });
+    const code = await prisma.code.findUnique({
+      where: {
+        fileId,
+      },
+    });
+    return res.json(code);
+  } catch (error: any) {
+    console.log(error.message);
+    return res.status(400).json({ error: "Unable to save" });
   }
 });

@@ -9,25 +9,14 @@ datasource db {
 }
 
 model User {
-  id         String       @id @default(uuid())
-  name       String?
-  verified   Boolean      @default(false)
-  email      String       @unique
-  password   String
-  submission Submission[]
-  FileNode   FileNode[]
+  id       String     @id @default(uuid())
+  name     String?
+  verified Boolean    @default(false)
+  email    String     @unique
+  password String
+  FileNode FileNode[]
 }
 
-model Submission {
-  id       String   @id @default(cuid())
-  userId   String
-  fileName String
-  code     String
-  lang     String
-  input    String
-  time     DateTime @default(now())
-  user     User     @relation(fields: [userId], references: [id])
-}
 
 model FileNode {
   id       Int        @id @default(autoincrement())
@@ -35,9 +24,18 @@ model FileNode {
   type     FileType
   userId   String
   parentId Int?
-  parent   FileNode?  @relation("ParentChild", fields: [parentId], references: [id] ,onDelete: Cascade)
+  parent   FileNode?  @relation("ParentChild", fields: [parentId], references: [id], onDelete: Cascade)
   children FileNode[] @relation("ParentChild")
+  code     Code?
   user     User       @relation(fields: [userId], references: [id])
+}
+
+model Code {
+  id       String   @id @default(cuid())
+  fileId   Int      @unique
+  code     String
+  input    String
+  fileNode FileNode @relation(fields: [fileId], references: [id])
 }
 
 enum FileType {

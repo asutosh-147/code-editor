@@ -1,29 +1,54 @@
-import { forwardRef } from "react";
+// import { forwardRef } from "react";
+import { useLang } from "@/store/hooks/useLang";
 import Input from "../ui/Input";
+import { UseFormRegisterReturn } from "react-hook-form";
 type UpdateInputFieldType = {
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  nodeIcon: "📄" | "📁";
+  isFile?: boolean;
   name?: string;
   onBlur: () => void;
+  inputRegister: UseFormRegisterReturn;
+  fileRegister: UseFormRegisterReturn;
 };
 
-const UpdateInputField = forwardRef<
-  HTMLInputElement | null,
-  UpdateInputFieldType
->(({ onSubmit, nodeIcon, name="", onBlur }, ref) => {
+const UpdateInputField = ({
+  onSubmit,
+  name = "",
+  onBlur,
+  isFile = false,
+  inputRegister,
+  fileRegister,
+}: UpdateInputFieldType) => {
+  const setCodeLang = useLang();
+  if(isFile){
+    setCodeLang(name,isFile)
+
+  }
   return (
-    <form onSubmit={onSubmit} className="flex items-center">
-      {nodeIcon}
+    <form
+      onSubmit={(e) => {
+        onSubmit(e);
+      }}
+      className="flex items-center"
+    >
+      {isFile ? "📄" : "📁"}
       <Input
-        ref={ref}
+        {...inputRegister}
         type="text"
         defaultValue={name}
         autoFocus
         onBlur={onBlur}
         className="m-0 h-5 w-28 rounded-md p-0 px-1 py-0 text-black"
       />
+      <input
+        {...fileRegister}
+        checked={isFile}
+        type="checkbox"
+        className="hidden"
+      />
+      <button type="submit" className="hidden"></button>
     </form>
   );
-});
+};
 
 export default UpdateInputField;

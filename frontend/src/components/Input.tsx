@@ -1,8 +1,10 @@
-import { Dispatch, memo, SetStateAction } from "react";
+import { memo } from "react";
 import TextArea from "./TextArea";
+import { CodeAtomFamilyType } from "@/store/atoms/editor";
+import { SetterOrUpdater } from "recoil";
 type InputProps = {
   input: string;
-  setInput: Dispatch<SetStateAction<string>>;
+  setInput: SetterOrUpdater<CodeAtomFamilyType | null>;
 };
 const Input = memo(({ input, setInput }: InputProps) => {
   return (
@@ -15,7 +17,12 @@ const Input = memo(({ input, setInput }: InputProps) => {
         placeholder="Your Inputs Here..."
         text={input}
         onChange={(e) => {
-          setInput(e.target.value);
+          setInput(prev =>{
+            if(e.target.value.length > 0 && prev){
+              return {...prev,input:e.target.value}
+            }
+            return null;
+          });
         }}
       />
     </div>
