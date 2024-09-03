@@ -6,13 +6,13 @@ import { IoMdMoon } from "react-icons/io";
 import { MdLightMode } from "react-icons/md";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { RiSpeedUpFill } from "react-icons/ri";
-import { RxHamburgerMenu } from "react-icons/rx";
 import { sideBarAtom } from "@/store/atoms/sidebar";
 import Tooltip from "./ui/Tooltip";
 import Button from "./ui/Button";
 import Timer from "./Timer";
 import ConvertCode from "./ConvertCode";
 import LangSelector from "./LangSelector";
+import { LuFiles } from "react-icons/lu";
 type ToolBarProps = {
   onSubmit: () => void;
   getTC: () => void;
@@ -37,7 +37,7 @@ const ToolBar = memo(({ onSubmit, getTC }: ToolBarProps) => {
   return (
     <div className="flex w-full items-center justify-center gap-2 p-2 pt-7 text-zinc-50 dark:text-zinc-200">
       <Button onClick={toggleSideBar} className="p-1 text-lg dark:text-white">
-        <RxHamburgerMenu />
+        <LuFiles />
         <Tooltip title="Explorer" position="top" />
       </Button>
       <Timer />

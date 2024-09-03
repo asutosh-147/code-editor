@@ -7,8 +7,6 @@ import Output from "./Output";
 import ToolBar from "./ToolBar";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { themeAtom } from "@/store/atoms/theme";
-import { useUser } from "@/store/hooks/useUser";
-import { useNavigate } from "react-router-dom";
 import {
   ResizableHandle,
   ResizablePanel,
@@ -17,8 +15,6 @@ import {
 import { codeAtomFamily, langAtom } from "@/store/atoms/editor";
 import { toast } from "sonner";
 const CodeIDE = ({ id }: { id: number }) => {
-  const user = useUser();
-  const navigate = useNavigate();
   const [data, setData] = useRecoilState(codeAtomFamily(id));
   const theme = useRecoilValue(themeAtom);
   const lang = useRecoilValue(langAtom);
@@ -78,11 +74,7 @@ const CodeIDE = ({ id }: { id: number }) => {
       setLoading(false);
     }
   };
-  useEffect(() => {
-    if (!user) {
-      navigate("/login");
-    }
-  }, [user, navigate]);
+
   const save = useCallback(async () => {
     const response = await axios.post(
       `${backend_url}/api/file/code/save`,

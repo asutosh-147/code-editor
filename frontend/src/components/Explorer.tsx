@@ -1,6 +1,11 @@
 import { useFileTree } from "@/store/hooks/useFileTree";
 import FileTree from "./fileTree/FileTree";
 import { motion, Variants } from "framer-motion";
+import { useSetRecoilState } from "recoil";
+import { userAtom } from "@/store/atoms/user";
+import { backend_url } from "@/lib/constants";
+import axios from "axios";
+import { FiLogOut } from "react-icons/fi";
 const sideBarVariant: Variants = {
   hidden: {
     opacity: 1,
@@ -15,6 +20,17 @@ const sideBarVariant: Variants = {
 const Explorer = () => {
   const { fileTreeData, insertNodeState, deleteNodeState, updateNodeState } =
     useFileTree();
+    const setUser = useSetRecoilState(userAtom);
+  const handleLogout = async () =>{
+    try {
+      const response = await axios.get(`${backend_url}/api/auth/logout`, {
+        withCredentials: true,
+      });
+      if (response.status === 200) setUser(null);
+    } catch (error: any) {
+      console.log("error in logging out", error.message);
+    }
+  }
   return (
       <motion.div
         variants={sideBarVariant}
@@ -22,7 +38,7 @@ const Explorer = () => {
         animate="visible"
         exit="exit"
         transition={{ delay: 0.1, type: "spring", mass: 0.32 }}
-        className="fixed left-0 z-50 h-screen w-64 space-y-3 rounded-r-md border-r border-zinc-300 py-2 shadow-2xl backdrop-blur-xl  dark:border-zinc-600"
+        className="fixed left-0 z-50 h-screen w-64 space-y-3 rounded-r-md border-r border-zinc-300 py-2 shadow-2xl backdrop-blur-xl  dark:border-zinc-600 flex flex-col justify-between"
       >
         <FileTree
           data={fileTreeData}
@@ -30,6 +46,10 @@ const Explorer = () => {
           deleteNode={deleteNodeState}
           updateNode={updateNodeState}
         />
+        <div onClick={handleLogout} className="flex w-full cursor-pointer items-center justify-center gap-4 self-end font-bold rounded-sm p-2 tracking-wider text-zinc-950 dark:text-zinc-200 transition-all duration-300 hover:bg-zinc-300 hover:dark:bg-zinc-600">
+          <FiLogOut className="text-xl" />
+          Logout
+        </div>
       </motion.div>
   );
 };

@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
-import { fileTreeType } from "@/lib/filesData";
 import UpdateInputField from "./UpdateInputField";
 import FileActionButtons from "./FileActionButtons";
 import CreateActionButtons from "./CreateActionButtons";
 import axios from "axios";
+import React, { useEffect } from "react";
+import { useState } from "react";
+import { fileTreeType } from "@/lib/filesData";
 import { backend_url } from "@/lib/constants";
 import { toast } from "sonner";
 import { FaChevronRight } from "react-icons/fa";
@@ -38,6 +38,7 @@ const FileTree = ({
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<treeInputType>({
     resolver: zodResolver(inputTreeSchema),
   });
@@ -55,6 +56,7 @@ const FileTree = ({
       open: true,
       isFile: e.currentTarget.name === "folder" ? false : true,
     });
+    reset();
   };
   const handleNewNode = async (fieldData: treeInputType) => {
     const type = fieldData.isFile ? "FILE" : "FOLDER";
@@ -81,7 +83,7 @@ const FileTree = ({
       toast.error(error.response.data.error);
       console.log(error.message);
     }
-    setInputOpen((prev) => ({ ...prev, open: false }));
+    setInputOpen({ isFile: false, open: false });
   };
 
   const handleDeleteNode = async (
@@ -140,8 +142,9 @@ const FileTree = ({
     if (Object.keys(errors).length > 0) {
       const firstError = Object.values(errors).at(0)?.message;
       toast.error(firstError || "An error occurred!");
+      reset();
     }
-  }, [errors]);
+  }, [errors, reset]);
   return (
     <div className="w-max cursor-pointer px-1 dark:text-white">
       {data.type === "FILE" ? (
@@ -151,7 +154,10 @@ const FileTree = ({
               <UpdateInputField
                 onSubmit={handleSubmit(handleUpdateNode)}
                 name={data.name}
-                onBlur={() => setUpdateOpen(false)}
+                onBlur={() => {
+                  setUpdateOpen(false);
+                }}
+                reset={reset}
                 isFile
                 inputRegister={{ ...register("name") }}
                 fileRegister={{ ...register("isFile") }}
@@ -162,7 +168,7 @@ const FileTree = ({
                   setCurrentFileId(data.id);
                   setLang(data.name, true);
                 }}
-                className={`${fileId === data.id ? "rounded-md bg-zinc-400 dark:bg-zinc-600 pr-2" : ""}`}
+                className={`${fileId === data.id ? "rounded-md bg-zinc-400 pr-2 dark:bg-zinc-600" : ""}`}
               >
                 📄 {data.name}
               </div>
@@ -186,19 +192,26 @@ const FileTree = ({
                 <UpdateInputField
                   onSubmit={handleSubmit(handleUpdateNode)}
                   name={data.name}
-                  onBlur={() => setUpdateOpen(false)}
+                  onBlur={() => {
+                    setUpdateOpen(false);
+                  }}
                   inputRegister={{ ...register("name") }}
                   fileRegister={{ ...register("isFile") }}
                   isFile={false}
+                  reset={reset}
                 />
               ) : (
                 <>
-                  <div>
+                  <div className={`flex items-center transition-all duration-75 ${open?"pt-1":""}`}>
                     <FaChevronRight
-                      className={`text-xs ${open ? "rotate-90" : ""}`}
+                      className={` text-xs ${open ? "rotate-90" : ""}`}
                     />
                   </div>
-                  📁 {data.name}
+                  <div>
+
+                  {data.parentId === null ? "" : "📁"}
+                  {data.name}
+                  </div>
                 </>
               )}
             </div>
@@ -215,15 +228,14 @@ const FileTree = ({
           {inputOpen.open && (
             <div className="pl-6">
               <UpdateInputField
-                onSubmit={handleSubmit((d) => {
-                  handleNewNode(d);
-                })}
-                onBlur={() =>
-                  setInputOpen((prev) => ({ ...prev, open: false }))
-                }
+                onSubmit={handleSubmit(handleNewNode)}
+                onBlur={() => {
+                  setInputOpen({ open: false, isFile: false });
+                }}
                 inputRegister={{ ...register("name") }}
                 fileRegister={{ ...register("isFile") }}
                 isFile={inputOpen.isFile}
+                reset={reset}
               />
             </div>
           )}

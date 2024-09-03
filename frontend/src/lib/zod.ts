@@ -29,8 +29,6 @@ export const signInSchema = z.object({
 export type signUpType = z.infer<typeof signUpSchema>;
 export type signInType = z.infer<typeof signInSchema>;
 
-//fileTree input validation
-
 export const inputTreeSchema = z
   .object({
     name: z.string().min(1),
@@ -43,7 +41,7 @@ export const inputTreeSchema = z
         if (splited.length !== 2 || !/(py|cpp|js)/.test(splited[1])){
           ctx.addIssue({
             code:z.ZodIssueCode.custom,
-            message:"file name mustcontain a valid supported extension",
+            message:"file name mustcontain a valid supported extension(cpp,js,py)",
             path:["name"]
           })
         }
