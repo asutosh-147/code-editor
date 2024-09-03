@@ -36,8 +36,8 @@ const AuthApp = () => {
           }
         />
         <Route path="/editor" element={<Editor />} />
-        <Route path="/signup" element={<Layout children={<SignUp />} />} />
-        <Route path="/login" element={<Layout children={<Login />} />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
   );

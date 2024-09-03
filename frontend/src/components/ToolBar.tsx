@@ -1,7 +1,7 @@
 import { themeAtom } from "@/store/atoms/theme";
 import { useToggleTheme } from "@/store/hooks/toggleTheme";
 import { memo, useEffect, useRef } from "react";
-import { FaPlay } from "react-icons/fa";
+import { FaCheck, FaPlay } from "react-icons/fa";
 import { IoMdMoon } from "react-icons/io";
 import { MdLightMode } from "react-icons/md";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -13,11 +13,13 @@ import Timer from "./Timer";
 import ConvertCode from "./ConvertCode";
 import LangSelector from "./LangSelector";
 import { LuFiles } from "react-icons/lu";
+import { GoDotFill } from "react-icons/go";
 type ToolBarProps = {
   onSubmit: () => void;
   getTC: () => void;
+  saved: boolean;
 };
-const ToolBar = memo(({ onSubmit, getTC }: ToolBarProps) => {
+const ToolBar = memo(({ onSubmit, getTC, saved }: ToolBarProps) => {
   const theme = useRecoilValue(themeAtom);
   const toggleTheme = useToggleTheme();
   const setSideBar = useSetRecoilState(sideBarAtom);
@@ -26,7 +28,6 @@ const ToolBar = memo(({ onSubmit, getTC }: ToolBarProps) => {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.key == "'") runCodeRef.current?.click();
-      
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => {
@@ -35,31 +36,46 @@ const ToolBar = memo(({ onSubmit, getTC }: ToolBarProps) => {
   }, []);
 
   return (
-    <div className="flex w-full items-center justify-center gap-2 p-2 pt-7 text-zinc-50 dark:text-zinc-200">
-      <Button onClick={toggleSideBar} className="p-1 text-lg dark:text-white">
-        <LuFiles />
-        <Tooltip title="Explorer" position="top" />
-      </Button>
-      <Timer />
-      <LangSelector />
-      <Button ref={runCodeRef} onClick={onSubmit}>
-        <FaPlay className="text-xs" />
-        <div>Run Code</div>
-        <Tooltip title="Ctrl + '" position="top" />
-      </Button>
-      <ConvertCode />
-      <Button onClick={getTC}>
-        <RiSpeedUpFill className="text-lg" />
-        <Tooltip title="Time Comlexity" position="top" />
-      </Button>
-      <Button className="p-1 text-lg" onClick={toggleTheme}>
-        {theme == "light" ? (
-          <MdLightMode />
+    <div className="flex w-full items-center p-2 pt-7 text-zinc-50 dark:text-zinc-200">
+      <div className="flex flex-grow justify-center gap-2">
+        <Button className="p-1 text-lg" onClick={toggleTheme}>
+          {theme == "light" ? (
+            <MdLightMode />
+          ) : (
+            <IoMdMoon className="text-zinc-200" />
+          )}
+          <Tooltip title="Theme" position="top" />
+        </Button>
+        <Timer />
+        <LangSelector />
+        <Button ref={runCodeRef} onClick={onSubmit}>
+          <FaPlay className="text-xs" />
+          <div>Run Code</div>
+          <Tooltip title="Ctrl + '" position="top" />
+        </Button>
+        <ConvertCode />
+        <Button onClick={getTC}>
+          <RiSpeedUpFill className="text-lg" />
+          <Tooltip title="Time Comlexity" position="top" />
+        </Button>
+
+        <Button onClick={toggleSideBar} className="p-1 text-lg dark:text-white">
+          <LuFiles />
+          <Tooltip title="Explorer" position="top" />
+        </Button>
+      </div>
+
+      <div className="ml-auto font-medium bg-zinc-900 p-1 rounded-md flex text-sm items-center gap-1">
+        {!saved ? (
+          <>
+            save<GoDotFill className="text-lg mt-[0.2rem]" />
+          </>
         ) : (
-          <IoMdMoon className="text-zinc-200" />
+          <>
+            saved<FaCheck className="text-xs" />
+          </>
         )}
-        <Tooltip title="Theme" position="top" />
-      </Button>
+      </div>
     </div>
   );
 });

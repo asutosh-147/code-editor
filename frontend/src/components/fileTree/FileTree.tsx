@@ -99,6 +99,9 @@ const FileTree = ({
       });
       if (response.status === 200) {
         deleteNode(response.data);
+        if(data.type === "FILE" && data.id === fileId){
+          setCurrentFileId(null);
+        }
       }
     } catch (error: any) {
       toast(`Error in Deleting ${data.name}`);

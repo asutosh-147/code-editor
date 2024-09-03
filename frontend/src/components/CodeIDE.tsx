@@ -74,7 +74,6 @@ const CodeIDE = ({ id }: { id: number }) => {
       setLoading(false);
     }
   };
-
   const save = useCallback(async () => {
     const response = await axios.post(
       `${backend_url}/api/file/code/save`,
@@ -106,7 +105,7 @@ const CodeIDE = ({ id }: { id: number }) => {
   if (data == null) return <div>noValue</div>;
   return (
     <div className="flex h-screen flex-col items-center">
-      <ToolBar onSubmit={handleSubmit} getTC={fetchTimeComplexity} />
+      <ToolBar onSubmit={handleSubmit} getTC={fetchTimeComplexity} saved={saved} />
       <ResizablePanelGroup
         direction="horizontal"
         className="grid h-full w-full flex-1 grid-cols-6 gap-[0.01rem] p-1"
