@@ -16,7 +16,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             {...props}
             className={cn(
-              "w-full rounded-2xl py-1 text-sm text-gray-600 focus:outline-none",
+              "w-full rounded-md py-1 text-sm text-gray-600 focus:outline-none focus:ring-2 ring-black transition-all duration-100",
               className,
               {
                 "px-8": children,

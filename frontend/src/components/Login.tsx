@@ -51,14 +51,13 @@ const Login = () => {
     if (user) navigate("/editor");
   }, [user, navigate]);
   return (
-    <div className="flex w-full items-center justify-center pt-10">
-      <div className="flex rounded-xl shadow-2xl bg-zinc-300">
-        <img src="/authImage.jpg" alt="authimage" className="w-[40rem] flex-1 rounded-l-md" />
+    <div className="flex w-full h-screen items-center justify-center">
+      <div className="flex rounded-xl shadow-2xl bg-zinc-200">
         <form
           onSubmit={handleSubmit(handleFormSubmit)}
-          className="flex w-max flex-col items-center justify-around gap-10 px-9 pt-6"
+          className="flex w-max flex-col items-center justify-around gap-10 px-9 py-3"
         >
-          <div className="text-3xl font-bold">Login</div>
+          <div className="text-2xl font-bold">Welcome Back!</div>
           <div className="flex flex-col items-start gap-3">
             <Input
               {...register("email")}
@@ -97,15 +96,16 @@ const Login = () => {
             type="submit"
             loading={isSubmitting}
           >
-            Submit
+            Login
           </Button>
           <div className="text-xs">
-            Already have an Account?{" "}
+            Don't have an Account?{" "}
             <Link to={"/signup"}>
               <b>SignUp</b>
             </Link>
           </div>
         </form>
+        <img src="/authImage.jpg" alt="authimage" className="lg:w-[40rem] md:w-[25rem] flex-1 rounded-r-xl md:block hidden" />
       </div>
     </div>
   );

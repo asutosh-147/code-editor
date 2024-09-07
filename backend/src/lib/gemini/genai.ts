@@ -13,13 +13,16 @@ export const getTimeComplexity = async (code:string) => {
   }
 }
 
-export const convertCode = async (originalCode: string, originalLang:string, targetLanguage: string) => {
+export const convertCode = async (originalCode: string, originalLang: string, targetLanguage: string) => {
   try {
-    const prompt = `Convert the following code of ${originalLang} to  ${targetLanguage} with correct formatting. don't keep any explanations just give me the code nothing else don't keep any keyword that'll make problem in compilation, remove the language name in the starting of your response, Ensure that the syntax and semantics are accurately preserved and that the code is ready for use in a typical development environment:\n\n" + ${originalCode}`;
-    const result = await model.generateContent(prompt);
-    const resultText = result.response.text();
-    return resultText.slice(3,resultText.length-3);
+      const prompt = `Convert the following ${originalLang} code to ${targetLanguage} with correct formatting. Remove any explanations and language names. Ensure syntax, semantics, and compilability are preserved:\n\n${originalCode}`;
+
+      const result = await model.generateContent(prompt);
+      const resultText = result.response.text();
+      // Remove the leading and trailing triple backticks and language names
+      const cleanedCode = resultText.replace(/^```|```$/g, '').split('\n').slice(1).join('\n');
+      return cleanedCode;
   } catch (error: any) {
-    return error.message;
+      return error.message;
   }
-}
+};

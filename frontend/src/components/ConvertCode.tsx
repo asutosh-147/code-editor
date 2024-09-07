@@ -5,8 +5,8 @@ import { ChangeEvent, memo, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 
 const ConvertCode = memo(() => {
-  const [selectedLang,setSelectedLang] = useRecoilState(langAtom);
   const [loading, setLoading] = useState(false);
+  const [selectedLang,setSelectedLang] = useRecoilState(langAtom);
   const id = useRecoilValue(currentFileIdAtom);
   const [data,setData] = useRecoilState(codeAtomFamily(id!));
   const handleConvertCode = async (e:ChangeEvent<HTMLSelectElement>) => {

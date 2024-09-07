@@ -5,7 +5,7 @@ import { backend_url } from "../lib/constants";
 import Input from "./Input";
 import Output from "./Output";
 import ToolBar from "./ToolBar";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { themeAtom } from "@/store/atoms/theme";
 import {
   ResizableHandle,
@@ -14,11 +14,12 @@ import {
 } from "@/components/ui/resizable";
 import { codeAtomFamily, langAtom } from "@/store/atoms/editor";
 import { toast } from "sonner";
+import { sideBarAtom } from "@/store/atoms/sidebar";
 const CodeIDE = ({ id }: { id: number }) => {
   const [data, setData] = useRecoilState(codeAtomFamily(id));
   const theme = useRecoilValue(themeAtom);
   const lang = useRecoilValue(langAtom);
-  const [output, setOutput] = useState<string>("");
+  const setSideBar =useSetRecoilState(sideBarAtom);
   const [loading, setLoading] = useState(false);
   const [saved, setSaved] = useState(true);
   const handleSubmit = async () => {
@@ -36,9 +37,9 @@ const CodeIDE = ({ id }: { id: number }) => {
           withCredentials: true,
         },
       );
-      setOutput(response.data.output);
+      setData(prev => prev ? {...prev,output:response.data.output}:null);
     } catch (error: any) {
-      setOutput(error.message);
+      setData(prev => prev ? {...prev,output:error.message}:null);
     } finally {
       setLoading(false);
     }
@@ -67,9 +68,9 @@ const CodeIDE = ({ id }: { id: number }) => {
         },
         { withCredentials: true },
       );
-      setOutput(response.data.complexity);
+      setData(prev => prev ? {...prev,output:response.data.complexity}:null);
     } catch (error: any) {
-      setOutput(error.message);
+      setData(prev => prev ? {...prev,output:error.message}:null);
     } finally {
       setLoading(false);
     }
@@ -101,11 +102,17 @@ const CodeIDE = ({ id }: { id: number }) => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [save]);
-
-  if (data == null) return <div>noValue</div>;
+  useEffect(() => {
+    setSideBar(false);
+  
+    return () => {
+      
+    }
+  }, [id, setSideBar])
+  
   return (
     <div className="flex h-screen flex-col items-center">
-      <ToolBar onSubmit={handleSubmit} getTC={fetchTimeComplexity} saved={saved} />
+      <ToolBar onSubmit={handleSubmit} getTC={fetchTimeComplexity} saved={saved} onSave={save} />
       <ResizablePanelGroup
         direction="horizontal"
         className="grid h-full w-full flex-1 grid-cols-6 gap-[0.01rem] p-1"
@@ -119,7 +126,7 @@ const CodeIDE = ({ id }: { id: number }) => {
             height="100%"
             theme={theme == "dark" ? "vs-dark" : "light"}
             language={lang}
-            value={data.code}
+            value={data?.code}
             onChange={handleEditorChange}
           />
         </ResizablePanel>
@@ -133,14 +140,14 @@ const CodeIDE = ({ id }: { id: number }) => {
             className="col-span-2 flex min-h-full flex-col dark:text-zinc-200"
           >
             <ResizablePanel defaultSize={25}>
-              <Input input={data.input} setInput={setData} />
+              <Input input={data?.input ?? ''} setInput={setData} />
             </ResizablePanel>
             <ResizableHandle
               withHandle
               className="border-none bg-gray-300 active:bg-blue-600 dark:bg-zinc-700 active:dark:bg-green-400"
             />
             <ResizablePanel defaultSize={75}>
-              <Output output={output} loading={loading} />
+              <Output output={data?.output ?? ''} loading={loading} />
             </ResizablePanel>
           </ResizablePanelGroup>
         </ResizablePanel>

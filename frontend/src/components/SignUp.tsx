@@ -51,13 +51,12 @@ const SignUp = () => {
     if (user) navigate("/editor");
   }, [user, navigate]);
   return (
-    <div className="flex w-full items-center justify-center pt-10">
+    <div className="flex w-full h-screen items-center justify-center">
       {!emailSent ? (
-        <div className="flex rounded-xl bg-zinc-300 shadow-2xl">
-          <img src="/authImage.jpg" alt="authimage" className="w-[40rem] flex-1 rounded-l-md" />
+        <div className="flex rounded-xl bg-zinc-200 shadow-2xl">
           <form
             onSubmit={handleSubmit(handleSignUp)}
-            className="flex w-72 flex-col items-center justify-around gap-8 px-9 pt-5"
+            className="flex w-72 flex-col items-center justify-around gap-8 px-9 py-3"
           >
             <div className="text-3xl font-bold">Signup</div>
             <div className="flex flex-col items-start gap-3">
@@ -117,6 +116,7 @@ const SignUp = () => {
               </Link>
             </div>
           </form>
+          <img src="/authImage.jpg" alt="authimage" className="lg:w-[40rem] md:w-[25rem] flex-1 rounded-r-xl md:block hidden" />
         </div>
       ) : (
         <div className="flex items-center justify-center rounded-md bg-zinc-200 p-10 text-center font-bold capitalize">

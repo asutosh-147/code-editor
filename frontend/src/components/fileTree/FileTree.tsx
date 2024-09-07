@@ -7,7 +7,7 @@ import { useState } from "react";
 import { fileTreeType } from "@/lib/filesData";
 import { backend_url } from "@/lib/constants";
 import { toast } from "sonner";
-import { FaChevronRight } from "react-icons/fa";
+import { FaChevronRight, FaFileCode, FaFolder, FaFolderOpen } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import { inputTreeSchema, treeInputType } from "@/lib/zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -99,7 +99,7 @@ const FileTree = ({
       });
       if (response.status === 200) {
         deleteNode(response.data);
-        if(data.type === "FILE" && data.id === fileId){
+        if (data.type === "FILE" && data.id === fileId) {
           setCurrentFileId(null);
         }
       }
@@ -171,9 +171,9 @@ const FileTree = ({
                   setCurrentFileId(data.id);
                   setLang(data.name, true);
                 }}
-                className={`${fileId === data.id ? "rounded-md bg-zinc-400 pr-2 dark:bg-zinc-600" : ""}`}
+                className={`${fileId === data.id ? "rounded-md bg-zinc-400 pr-2 dark:bg-zinc-600" : ""} flex items-center gap-1`}
               >
-                📄 {data.name}
+                <FaFileCode /> {data.name}
               </div>
             )}
           </div>
@@ -205,15 +205,20 @@ const FileTree = ({
                 />
               ) : (
                 <>
-                  <div className={`flex items-center transition-all duration-75 ${open?"pt-1":""}`}>
+                  <div
+                    className={`flex items-center transition-all duration-75 ${open ? "pt-1" : ""}`}
+                  >
                     <FaChevronRight
-                      className={` text-xs ${open ? "rotate-90" : ""}`}
+                      className={`text-xs ${open ? "rotate-90" : ""}`}
                     />
                   </div>
-                  <div>
-
-                  {data.parentId === null ? "" : "📁"}
-                  {data.name}
+                  <div className="flex items-center gap-1 pl-1">
+                    {data.parentId === null ? (
+                      ""
+                    ) : (
+                      <div>{open ? <FaFolderOpen /> : <FaFolder />}</div>
+                    )}
+                    {data.name}
                   </div>
                 </>
               )}

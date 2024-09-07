@@ -7,21 +7,7 @@ export const langAtom = atom<SupportedLangsType>({
   default: selector({
     key: "langSelector/default",
     get: () => {
-      // const code = localStorage.getItem("lang") as SupportedLangsType;
-      // if (code) return code;
       return "python";
-    },
-  }),
-});
-
-export const editorValueAtom = atom<string | undefined>({
-  key: "editorValueAtom",
-  default: selector({
-    key: "editorValueSelector/default",
-    get: () => {
-      const code = localStorage.getItem("code");
-      if (code) return code;
-      return undefined;
     },
   }),
 });
@@ -36,6 +22,7 @@ export type CodeAtomFamilyType = {
   fileId: number;
   code: string;
   input: string;
+  output: string;
 };
 
 export const codeAtomFamily = atomFamily<CodeAtomFamilyType | null, number>({
@@ -50,7 +37,7 @@ export const codeAtomFamily = atomFamily<CodeAtomFamilyType | null, number>({
           { withCredentials: true },
         );
         if (response.status === 200) {
-          return response.data as CodeAtomFamilyType;
+          return {...response.data, output:''} as CodeAtomFamilyType;
         }
       } catch (error: any) {
         console.log(error);

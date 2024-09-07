@@ -18,8 +18,9 @@ type ToolBarProps = {
   onSubmit: () => void;
   getTC: () => void;
   saved: boolean;
+  onSave: () => void;
 };
-const ToolBar = memo(({ onSubmit, getTC, saved }: ToolBarProps) => {
+const ToolBar = memo(({ onSubmit, getTC, saved, onSave }: ToolBarProps) => {
   const theme = useRecoilValue(themeAtom);
   const toggleTheme = useToggleTheme();
   const setSideBar = useSetRecoilState(sideBarAtom);
@@ -38,13 +39,9 @@ const ToolBar = memo(({ onSubmit, getTC, saved }: ToolBarProps) => {
   return (
     <div className="flex w-full items-center p-2 pt-7 text-zinc-50 dark:text-zinc-200">
       <div className="flex flex-grow justify-center gap-2">
-        <Button className="p-1 text-lg" onClick={toggleTheme}>
-          {theme == "light" ? (
-            <MdLightMode />
-          ) : (
-            <IoMdMoon className="text-zinc-200" />
-          )}
-          <Tooltip title="Theme" position="top" />
+        <Button onClick={toggleSideBar} className="p-1 text-lg dark:text-white">
+          <LuFiles />
+          <Tooltip title="Explorer" position="top" />
         </Button>
         <Timer />
         <LangSelector />
@@ -58,24 +55,33 @@ const ToolBar = memo(({ onSubmit, getTC, saved }: ToolBarProps) => {
           <RiSpeedUpFill className="text-lg" />
           <Tooltip title="Time Comlexity" position="top" />
         </Button>
-
-        <Button onClick={toggleSideBar} className="p-1 text-lg dark:text-white">
-          <LuFiles />
-          <Tooltip title="Explorer" position="top" />
+        <Button className="p-1 text-lg" onClick={toggleTheme}>
+          {theme == "light" ? (
+            <MdLightMode />
+          ) : (
+            <IoMdMoon className="text-zinc-200" />
+          )}
+          <Tooltip title="Theme" position="top" />
         </Button>
       </div>
 
-      <div className="ml-auto font-medium bg-zinc-900 p-1 rounded-md flex text-sm items-center gap-1">
+      <Button
+        onClick={onSave}
+        className="group relative ml-auto flex items-center gap-1 rounded-md bg-zinc-900 p-1 px-2 text-sm font-medium"
+      >
         {!saved ? (
           <>
-            save<GoDotFill className="text-lg mt-[0.2rem]" />
+            save
+            <GoDotFill className="mt-[0.2rem] text-lg" />
           </>
         ) : (
           <>
-            saved<FaCheck className="text-xs" />
+            saved
+            <FaCheck className="text-xs" />
           </>
         )}
-      </div>
+        <Tooltip title="ctrl + s" position="top" />
+      </Button>
     </div>
   );
 });

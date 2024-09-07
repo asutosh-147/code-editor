@@ -1,4 +1,4 @@
-import { FaChevronRight } from "react-icons/fa";
+import { FaChevronRight, FaFileCode, FaFolder } from "react-icons/fa";
 import Input from "../ui/Input";
 import { UseFormRegisterReturn, UseFormReset } from "react-hook-form";
 
@@ -32,11 +32,11 @@ const UpdateInputField = ({
   return (
     <form onSubmit={handleSubmit} className="flex items-center">
       {isFile ? (
-        <span>📄</span>
+        <span className="pr-1"><FaFileCode /></span>
       ) : (
-        <span className="flex items-center">
+        <span className="flex items-center gap-1 pr-1">
           <FaChevronRight className={`text-xs`} />
-          📁
+          <FaFolder />
         </span>
       )}
       <Input
