@@ -13,6 +13,7 @@ const Editor = () => {
   const id = useRecoilValue(currentFileIdAtom);
   const isSideBarOpen = useRecoilValue(sideBarAtom);
   const user = useUser();
+  console.log(user);
   const navigate = useNavigate();
   useEffect(() => {
     if (!user) {

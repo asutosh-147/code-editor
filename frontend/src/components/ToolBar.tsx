@@ -41,7 +41,7 @@ const ToolBar = memo(({ onSubmit, getTC, saved, onSave }: ToolBarProps) => {
       <div className="flex flex-grow justify-center gap-2">
         <Button onClick={toggleSideBar} className="p-1 text-lg dark:text-white">
           <LuFiles />
-          <Tooltip title="Explorer" position="top" />
+          <Tooltip title="Explorer (ctrl + b)" position="top" />
         </Button>
         <Timer />
         <LangSelector />

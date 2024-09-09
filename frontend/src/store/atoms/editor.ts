@@ -1,6 +1,7 @@
 import { backend_url, SupportedLangsType } from "@/lib/constants";
 import axios from "axios";
 import { atom, atomFamily, selector, selectorFamily } from "recoil";
+import { userAtom } from "./user";
 
 export const langAtom = atom<SupportedLangsType>({
   key: "langAtom",
@@ -29,7 +30,9 @@ export const codeAtomFamily = atomFamily<CodeAtomFamilyType | null, number>({
   key: "codeAtomFamily",
   default: selectorFamily({
     key: "codeAtomFamily/Default",
-    get: (id) => async () => {
+    get: (id) => async ({get}) => {
+      const user = get(userAtom);
+      if(!user) return null;
       try {
         if (id === null) return null;
         const response = await axios.get(

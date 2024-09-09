@@ -53,7 +53,6 @@ const CodeIDE = ({ id }: { id: number }) => {
         }
         return null;
       });
-      localStorage.setItem("code", value);
     }
   };
 
@@ -96,12 +95,15 @@ const CodeIDE = ({ id }: { id: number }) => {
         e.preventDefault();
         save();
       }
+      else if(e.ctrlKey && e.key == 'b'){
+        setSideBar(prev => !prev);
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [save]);
+  }, [save,setSideBar]);
   useEffect(() => {
     setSideBar(false);
   

@@ -6,6 +6,7 @@ import { userAtom } from "@/store/atoms/user";
 import { backend_url } from "@/lib/constants";
 import axios from "axios";
 import { FiLogOut } from "react-icons/fi";
+import { currentFileIdAtom } from "@/store/atoms/editor";
 const sideBarVariant: Variants = {
   hidden: {
     opacity: 1,
@@ -21,12 +22,16 @@ const Explorer = () => {
   const { fileTreeData, insertNodeState, deleteNodeState, updateNodeState } =
     useFileTree();
   const setUser = useSetRecoilState(userAtom);
+  const setCurrentFileId = useSetRecoilState(currentFileIdAtom);
   const handleLogout = async () => {
     try {
       const response = await axios.get(`${backend_url}/api/auth/logout`, {
         withCredentials: true,
       });
-      if (response.status === 200) setUser(null);
+      if (response.status === 200){
+        setCurrentFileId(null);
+        setUser(null);
+      } 
     } catch (error: any) {
       console.log("error in logging out", error.message);
     }

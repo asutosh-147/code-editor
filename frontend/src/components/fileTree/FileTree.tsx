@@ -171,9 +171,9 @@ const FileTree = ({
                   setCurrentFileId(data.id);
                   setLang(data.name, true);
                 }}
-                className={`${fileId === data.id ? "rounded-md bg-zinc-400 pr-2 dark:bg-zinc-600" : ""} flex items-center gap-1`}
+                className={`${fileId === data.id ? "rounded-md bg-zinc-200 pr-2 dark:bg-zinc-600" : ""} flex items-center gap-1`}
               >
-                <FaFileCode /> {data.name}
+                <FaFileCode className="text-zinc-600 dark:text-zinc-50" /> {data.name}
               </div>
             )}
           </div>
@@ -216,7 +216,7 @@ const FileTree = ({
                     {data.parentId === null ? (
                       ""
                     ) : (
-                      <div>{open ? <FaFolderOpen /> : <FaFolder />}</div>
+                      <div>{open ? <FaFolderOpen className="text-zinc-600 dark:text-zinc-50" /> : <FaFolder className="text-zinc-600 dark:text-zinc-50" />}</div>
                     )}
                     {data.name}
                   </div>
