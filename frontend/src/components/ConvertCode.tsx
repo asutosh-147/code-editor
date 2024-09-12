@@ -1,5 +1,6 @@
 import { backend_url, supportedlangs, SupportedLangsType } from "@/lib/constants";
 import { codeAtomFamily, currentFileIdAtom, langAtom } from "@/store/atoms/editor";
+import { useFileTree } from "@/store/hooks/useFileTree";
 import axios from "axios";
 import { ChangeEvent, memo, useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -9,12 +10,14 @@ const ConvertCode = memo(() => {
   const [selectedLang,setSelectedLang] = useRecoilState(langAtom);
   const id = useRecoilValue(currentFileIdAtom);
   const [data,setData] = useRecoilState(codeAtomFamily(id!));
+  const { updateNodeState } = useFileTree();
   const handleConvertCode = async (e:ChangeEvent<HTMLSelectElement>) => {
     try {
       if(!data?.code || data.code.length===0) return;
       setLoading(true);
       const selectedValue = e.target.value;
       const response = await axios.post(`${backend_url}/api/code/convert`,{
+        fileId:id,
         code:data.code,
         lang:selectedLang,
         convertLang:selectedValue
@@ -27,6 +30,7 @@ const ConvertCode = memo(() => {
           }
           return null;
         });
+        updateNodeState({...response.data.updatedFile,children:[]});
       }
     } catch (error:any) {
       console.log(error.message);

@@ -26,7 +26,6 @@ const UpdateInputField = ({
 }: UpdateInputFieldType) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     onSubmit(e);
-    console.log("called");
     reset();
   };
   return (
