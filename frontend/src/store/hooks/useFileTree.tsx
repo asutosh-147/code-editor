@@ -50,10 +50,10 @@ const updateDFS = (node: fileTreeType, currNode: fileTreeType) => {
     ...currNode,
     children: currNode.children ? [...currNode.children] : [],
   };
-
+  //TODO:change update logic`
   if (node.parentId === nodeCopy.id) {
     const index = nodeCopy.children.findIndex((child) => child.id === node.id);
-    nodeCopy.children[index] = node;
+    nodeCopy.children[index] = {...nodeCopy.children[index], name:node.name};
     return nodeCopy;
   } else {
     nodeCopy.children = nodeCopy.children.map((child) =>
@@ -65,7 +65,6 @@ const updateDFS = (node: fileTreeType, currNode: fileTreeType) => {
 };
 export const useFileTree = () => {
   const [fileTreeData, setFileTreeData] = useRecoilState(fileTreeAtom);
-  // console.log(fileTreeData);
   const insertNodeState = (newNode: fileTreeType) => {
     setFileTreeData((prevData) => insertDfs(newNode, { ...prevData }));
   };
@@ -75,6 +74,7 @@ export const useFileTree = () => {
   };
 
   const updateNodeState = (updateNode: fileTreeType) => {
+    console.log(updateNode);
     setFileTreeData((prevData) => updateDFS(updateNode, {...prevData}));
   }
 
