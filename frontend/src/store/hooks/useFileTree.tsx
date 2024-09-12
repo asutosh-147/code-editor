@@ -74,7 +74,6 @@ export const useFileTree = () => {
   };
 
   const updateNodeState = (updateNode: fileTreeType) => {
-    console.log(updateNode);
     setFileTreeData((prevData) => updateDFS(updateNode, {...prevData}));
   }
 
